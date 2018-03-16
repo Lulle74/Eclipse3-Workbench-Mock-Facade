@@ -1,4 +1,4 @@
-package eclipseworkbench.compability;
+package eclipseworkbench.compatibility;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Compability
-Bundle-SymbolicName: eclipseworkbench.compability
+Bundle-SymbolicName: eclipseworkbench.compatibility
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: eclipseworkbench.compability.Activator
+Bundle-Activator: eclipseworkbench.compatibility.Activator
 Bundle-Vendor: Solme AB
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
