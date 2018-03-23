@@ -41,7 +41,6 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WWinPluginAction;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.Bundle;
@@ -479,7 +478,7 @@ public abstract class AbstractUIPlugin extends Plugin {
         // startup() is not guaranteed to be called in the UI thread,
         // but refreshPluginActions must run in the UI thread,
         // so use asyncExec.  See bug 6623 for more details.
-        Display.getDefault().asyncExec(() -> WWinPluginAction.refreshActionList());
+		//Display.getDefault().asyncExec(() -> WWinPluginAction.refreshActionList());
     }
 
     /**

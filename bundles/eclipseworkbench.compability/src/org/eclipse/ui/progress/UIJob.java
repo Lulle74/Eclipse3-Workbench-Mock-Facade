@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.misc.UIStats;
-import org.eclipse.ui.internal.progress.ProgressMessages;
 
 /**
  * The UIJob is a Job that runs within the UI Thread via an asyncExec.
@@ -91,21 +89,21 @@ public abstract class UIJob extends Job {
 		        if (monitor.isCanceled()) {
 					result = Status.CANCEL_STATUS;
 				} else {
-		           	UIStats.start(UIStats.UI_JOB, getName());
+					//UIStats.start(UIStats.UI_JOB, getName());
 		            result = runInUIThread(monitor);
 		        }
 
 		    } catch(Throwable t){
 		    	throwable = t;
 		    } finally {
-		   		UIStats.end(UIStats.UI_JOB, UIJob.this, getName());
-		        if (result == null) {
-					result = new Status(IStatus.ERROR,
-		                    PlatformUI.PLUGIN_ID, IStatus.ERROR,
-		                    ProgressMessages.InternalError,
-		                    throwable);
-				}
-		        done(result);
+				//UIStats.end(UIStats.UI_JOB, UIJob.this, getName());
+//		        if (result == null) {
+//					result = new Status(IStatus.ERROR,
+//		                    PlatformUI.PLUGIN_ID, IStatus.ERROR,
+//		                    ProgressMessages.InternalError,
+//		                    throwable);
+//				}
+//		        done(result);
 		    }
 		});
         return Job.ASYNC_FINISH;

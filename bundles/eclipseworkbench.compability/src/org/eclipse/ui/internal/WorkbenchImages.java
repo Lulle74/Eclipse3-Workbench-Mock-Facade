@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -27,8 +26,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.misc.Policy;
-import org.eclipse.ui.internal.misc.ProgramImageDescriptor;
 import org.eclipse.ui.internal.util.BundleUtility;
 
 /**
@@ -386,15 +383,15 @@ public/*final*/class WorkbenchImages {
      */
     public static void declareImage(String symbolicName,
             ImageDescriptor descriptor, boolean shared) {
-        if (Policy.DEBUG_DECLARED_IMAGES) {
-            Image image = descriptor.createImage(false);
-            if (image == null) {
-                WorkbenchPlugin.log("Image not found in WorkbenchImages.declaredImage().  symbolicName=" + symbolicName + " descriptor=" + descriptor, new Exception("stack dump"));   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            }
-            else {
-                image.dispose();
-            }
-        }
+//        if (Policy.DEBUG_DECLARED_IMAGES) {
+//            Image image = descriptor.createImage(false);
+//            if (image == null) {
+//                WorkbenchPlugin.log("Image not found in WorkbenchImages.declaredImage().  symbolicName=" + symbolicName + " descriptor=" + descriptor, new Exception("stack dump"));   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+//            }
+//            else {
+//                image.dispose();
+//            }
+//        }
         getDescriptors().put(symbolicName, descriptor);
         if (shared) {
             getImageRegistry().put(symbolicName, descriptor);
@@ -467,17 +464,17 @@ public/*final*/class WorkbenchImages {
      * @return the image descriptor
      */
 
-    public static ImageDescriptor getImageDescriptorFromProgram(
-            String filename, int offset) {
-        Assert.isNotNull(filename);
-        String key = filename + "*" + offset; //use * as it is not a valid filename character//$NON-NLS-1$
-        ImageDescriptor desc = getImageDescriptor(key);
-        if (desc == null) {
-            desc = new ProgramImageDescriptor(filename, offset);
-            getDescriptors().put(key, desc);
-        }
-        return desc;
-    }
+//    public static ImageDescriptor getImageDescriptorFromProgram(
+//            String filename, int offset) {
+//        Assert.isNotNull(filename);
+//        String key = filename + "*" + offset; //use * as it is not a valid filename character//$NON-NLS-1$
+//        ImageDescriptor desc = getImageDescriptor(key);
+//        if (desc == null) {
+//            desc = new ProgramImageDescriptor(filename, offset);
+//            getDescriptors().put(key, desc);
+//        }
+//        return desc;
+//    }
 
     /**
      * Returns the ImageRegistry.

@@ -17,25 +17,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.commands.internal.ICommandHelpService;
-import org.eclipse.e4.core.contexts.ContextFunction;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.services.help.EHelpService;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.util.BidiUtils;
 import org.eclipse.jface.window.Window;
@@ -44,42 +39,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.decorators.DecoratorManager;
-import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceManager;
-import org.eclipse.ui.internal.help.CommandHelpServiceImpl;
-import org.eclipse.ui.internal.help.HelpServiceImpl;
-import org.eclipse.ui.internal.intro.IIntroRegistry;
-import org.eclipse.ui.internal.intro.IntroRegistry;
-import org.eclipse.ui.internal.misc.StatusUtil;
-import org.eclipse.ui.internal.operations.WorkbenchOperationSupport;
-import org.eclipse.ui.internal.progress.ProgressManager;
-import org.eclipse.ui.internal.registry.ActionSetRegistry;
-import org.eclipse.ui.internal.registry.EditorRegistry;
-import org.eclipse.ui.internal.registry.IWorkbenchRegistryConstants;
-import org.eclipse.ui.internal.registry.PerspectiveRegistry;
-import org.eclipse.ui.internal.registry.PreferencePageRegistryReader;
-import org.eclipse.ui.internal.registry.ViewRegistry;
-import org.eclipse.ui.internal.registry.WorkingSetRegistry;
-import org.eclipse.ui.internal.themes.IThemeRegistry;
-import org.eclipse.ui.internal.themes.ThemeRegistry;
-import org.eclipse.ui.internal.themes.ThemeRegistryReader;
 import org.eclipse.ui.internal.util.BundleUtility;
-import org.eclipse.ui.internal.wizards.ExportWizardRegistry;
-import org.eclipse.ui.internal.wizards.ImportWizardRegistry;
-import org.eclipse.ui.internal.wizards.NewWizardRegistry;
-import org.eclipse.ui.operations.IWorkbenchOperationSupport;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.testing.TestableObject;
 import org.eclipse.ui.views.IViewRegistry;
-import org.eclipse.ui.wizards.IWizardRegistry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -134,19 +101,19 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
     private static WorkbenchPlugin inst;
 
     // Manager that maps resources to descriptors of editors to use
-    private EditorRegistry editorRegistry;
+	//private EditorRegistry editorRegistry;
 
     // Manager for the DecoratorManager
-    private DecoratorManager decoratorManager;
+	//private DecoratorManager decoratorManager;
 
     // Theme registry
-    private ThemeRegistry themeRegistry;
+	// private ThemeRegistry themeRegistry;
 
     // Manager for working sets (IWorkingSet)
-    private WorkingSetManager workingSetManager;
+	//private WorkingSetManager workingSetManager;
 
     // Working set registry, stores working set dialogs
-    private WorkingSetRegistry workingSetRegistry;
+	//private WorkingSetRegistry workingSetRegistry;
 
     // The context within which this plugin was started.
     private BundleContext bundleContext;
@@ -173,26 +140,26 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
     public static char PREFERENCE_PAGE_CATEGORY_SEPARATOR = '/';
 
     // Other data.
-    private WorkbenchPreferenceManager preferenceManager;
+	// private WorkbenchPreferenceManager preferenceManager;
 
-    private ViewRegistry viewRegistry;
+    //private ViewRegistry viewRegistry;
 
-    private PerspectiveRegistry perspRegistry;
+	//private PerspectiveRegistry perspRegistry;
 
-    private ActionSetRegistry actionSetRegistry;
+	//private ActionSetRegistry actionSetRegistry;
 
-    private SharedImages sharedImages;
+	//private SharedImages sharedImages;
 
     /**
      * Information describing the product (formerly called "primary plugin"); lazily
      * initialized.
      * @since 3.0
      */
-    private ProductInfo productInfo = null;
+	//private ProductInfo productInfo = null;
 
-    private IntroRegistry introRegistry;
+	//private IntroRegistry introRegistry;
 
-    private WorkbenchOperationSupport operationSupport;
+	//private WorkbenchOperationSupport operationSupport;
 	private BundleListener bundleListener;
 
 	private IEclipseContext e4Context;
@@ -219,49 +186,49 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * Unload all members.  This can be used to run a second instance of a workbench.
      * @since 3.0
      */
-    void reset() {
-        editorRegistry = null;
-
-        if (decoratorManager != null) {
-			decoratorManager.shutdown();
-            decoratorManager = null;
-        }
-
-        ProgressManager.shutdownProgressManager();
-
-        themeRegistry = null;
-        if (workingSetManager != null) {
-        	workingSetManager.dispose();
-        	workingSetManager = null;
-        }
-        workingSetRegistry = null;
-
-        preferenceManager = null;
-        if (viewRegistry != null) {
-			// nothing to dispose for viewRegistry
-            viewRegistry = null;
-        }
-        if (perspRegistry != null) {
-            perspRegistry.dispose();
-            perspRegistry = null;
-        }
-        actionSetRegistry = null;
-        sharedImages = null;
-
-        productInfo = null;
-        introRegistry = null;
-
-		helpService = null;
-		commandHelpService = null;
-
-        if (operationSupport != null) {
-        	operationSupport.dispose();
-        	operationSupport = null;
-        }
-
-        DEBUG = false;
-
-    }
+//    void reset() {
+//        editorRegistry = null;
+//
+//        if (decoratorManager != null) {
+//			decoratorManager.shutdown();
+//            decoratorManager = null;
+//        }
+//
+//        ProgressManager.shutdownProgressManager();
+//
+//        themeRegistry = null;
+//        if (workingSetManager != null) {
+//        	workingSetManager.dispose();
+//        	workingSetManager = null;
+//        }
+//        workingSetRegistry = null;
+//
+//        preferenceManager = null;
+//        if (viewRegistry != null) {
+//			// nothing to dispose for viewRegistry
+//            viewRegistry = null;
+//        }
+//        if (perspRegistry != null) {
+//            perspRegistry.dispose();
+//            perspRegistry = null;
+//        }
+//        actionSetRegistry = null;
+//        sharedImages = null;
+//
+//        productInfo = null;
+//        introRegistry = null;
+//
+//		helpService = null;
+//		commandHelpService = null;
+//
+//        if (operationSupport != null) {
+//        	operationSupport.dispose();
+//        	operationSupport = null;
+//        }
+//
+//        DEBUG = false;
+//
+//    }
 
     /**
      * Creates an extension.  If the extension plugin has not
@@ -326,8 +293,8 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 			return true;
 		IConfigurationElement [] children = element.getChildren(extensionName);
 		if (children.length == 1) {
-			if (children[0].getAttribute(IWorkbenchRegistryConstants.ATT_CLASS) != null)
-				return true;
+			//if (children[0].getAttribute(IWorkbenchRegistryConstants.ATT_CLASS) != null)
+			//	return true;
 		}
 		return false;
 	}
@@ -448,9 +415,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      *
      * @return the workbench action set registry
      */
-    public ActionSetRegistry getActionSetRegistry() {
-		return e4Context.get(ActionSetRegistry.class);
-    }
+//    public ActionSetRegistry getActionSetRegistry() {
+//		return e4Context.get(ActionSetRegistry.class);
+//    }
 
     /**
      * Return the default instance of the receiver. This represents the runtime plugin.
@@ -477,48 +444,48 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @param targetID
      * @return IElementFactory
      */
-    public IElementFactory getElementFactory(String targetID) {
-
-        // Get the extension point registry.
-        IExtensionPoint extensionPoint;
-        extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
-                PI_WORKBENCH, IWorkbenchRegistryConstants.PL_ELEMENT_FACTORY);
-
-        if (extensionPoint == null) {
-            WorkbenchPlugin
-                    .log("Unable to find element factory. Extension point: " + IWorkbenchRegistryConstants.PL_ELEMENT_FACTORY + " not found"); //$NON-NLS-2$ //$NON-NLS-1$
-            return null;
-        }
-
-        // Loop through the config elements.
-        IConfigurationElement targetElement = null;
-        IConfigurationElement[] configElements = extensionPoint
-                .getConfigurationElements();
-        for (IConfigurationElement configElement : configElements) {
-            String strID = configElement.getAttribute("id"); //$NON-NLS-1$
-            if (targetID.equals(strID)) {
-                targetElement = configElement;
-                break;
-            }
-        }
-        if (targetElement == null) {
-            // log it since we cannot safely display a dialog.
-            WorkbenchPlugin.log("Unable to find element factory: " + targetID); //$NON-NLS-1$
-            return null;
-        }
-
-        // Create the extension.
-        IElementFactory factory = null;
-        try {
-            factory = (IElementFactory) createExtension(targetElement, "class"); //$NON-NLS-1$
-        } catch (CoreException e) {
-            // log it since we cannot safely display a dialog.
-            WorkbenchPlugin.log(
-                    "Unable to create element factory.", e.getStatus()); //$NON-NLS-1$
-            factory = null;
-        }
-        return factory;
-    }
+//    public IElementFactory getElementFactory(String targetID) {
+//
+//        // Get the extension point registry.
+//        IExtensionPoint extensionPoint;
+//        extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+//                PI_WORKBENCH, IWorkbenchRegistryConstants.PL_ELEMENT_FACTORY);
+//
+//        if (extensionPoint == null) {
+//            WorkbenchPlugin
+//                    .log("Unable to find element factory. Extension point: " + IWorkbenchRegistryConstants.PL_ELEMENT_FACTORY + " not found"); //$NON-NLS-2$ //$NON-NLS-1$
+//            return null;
+//        }
+//
+//        // Loop through the config elements.
+//        IConfigurationElement targetElement = null;
+//        IConfigurationElement[] configElements = extensionPoint
+//                .getConfigurationElements();
+//        for (IConfigurationElement configElement : configElements) {
+//            String strID = configElement.getAttribute("id"); //$NON-NLS-1$
+//            if (targetID.equals(strID)) {
+//                targetElement = configElement;
+//                break;
+//            }
+//        }
+//        if (targetElement == null) {
+//            // log it since we cannot safely display a dialog.
+//            WorkbenchPlugin.log("Unable to find element factory: " + targetID); //$NON-NLS-1$
+//            return null;
+//        }
+//
+//        // Create the extension.
+//        IElementFactory factory = null;
+//        try {
+//            factory = (IElementFactory) createExtension(targetElement, "class"); //$NON-NLS-1$
+//        } catch (CoreException e) {
+//            // log it since we cannot safely display a dialog.
+//            WorkbenchPlugin.log(
+//                    "Unable to create element factory.", e.getStatus()); //$NON-NLS-1$
+//            factory = null;
+//        }
+//        return factory;
+//    }
 
     /**
      * Return the perspective registry.
@@ -544,9 +511,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the working set registry
      * @since 2.0
      */
-    public WorkingSetRegistry getWorkingSetRegistry() {
-		return e4Context.get(WorkingSetRegistry.class);
-    }
+//    public WorkingSetRegistry getWorkingSetRegistry() {
+//		return e4Context.get(WorkingSetRegistry.class);
+//    }
 
     /**
      * Returns the introduction registry.
@@ -554,9 +521,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the introduction registry.
      * @since 3.0
      */
-    public IIntroRegistry getIntroRegistry() {
-		return e4Context.get(IIntroRegistry.class);
-    }
+//    public IIntroRegistry getIntroRegistry() {
+//		return e4Context.get(IIntroRegistry.class);
+//    }
 
     /**
 	 * Returns the operation support.
@@ -564,15 +531,15 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 	 * @return the workbench operation support.
 	 * @since 3.1
 	 */
-    public IWorkbenchOperationSupport getOperationSupport() {
-		IWorkbenchOperationSupport op = e4Context.get(IWorkbenchOperationSupport.class);
-		if (op == null) {
-			// we're in shutdown, but some plugins get this in their stop()
-			// methods. In 3.x we just return a bogus one, so here it is
-			op = new WorkbenchOperationSupport();
-		}
-		return op;
-    }
+//    public IWorkbenchOperationSupport getOperationSupport() {
+//		IWorkbenchOperationSupport op = e4Context.get(IWorkbenchOperationSupport.class);
+//		if (op == null) {
+//			// we're in shutdown, but some plugins get this in their stop()
+//			// methods. In 3.x we just return a bogus one, so here it is
+//			op = new WorkbenchOperationSupport();
+//		}
+//		return op;
+//    }
 
 
     /**
@@ -589,24 +556,24 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      *
      * @return the shared image manager
      */
-    public ISharedImages getSharedImages() {
-    	if(sharedImages == null) {
-    		sharedImages = new SharedImages();
-    	}
-    	if(e4Context == null) {
-    		return sharedImages;
-    	}
-		return e4Context.get(ISharedImages.class);
-    }
+//    public ISharedImages getSharedImages() {
+//    	if(sharedImages == null) {
+//    		sharedImages = new SharedImages();
+//    	}
+//    	if(e4Context == null) {
+//    		return sharedImages;
+//    	}
+//		return e4Context.get(ISharedImages.class);
+//    }
 
     /**
      * Returns the theme registry for the workbench.
      *
      * @return the theme registry
      */
-    public IThemeRegistry getThemeRegistry() {
-		return e4Context.get(IThemeRegistry.class);
-    }
+//    public IThemeRegistry getThemeRegistry() {
+//		return e4Context.get(IThemeRegistry.class);
+//    }
 
     /**
      * Answer the view registry.
@@ -652,8 +619,8 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      *            A high level UI message describing when the problem happened.
      */
     public static void log(String message) {
-        getDefault().getLog().log(
-                StatusUtil.newStatus(IStatus.ERROR, message, null));
+		//getDefault().getLog().log(
+		//        StatusUtil.newStatus(IStatus.ERROR, message, null));
     }
 
     /**
@@ -670,7 +637,8 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 	 * @return IStatus
 	 */
 	public static IStatus getStatus(Throwable t) {
-		String message = StatusUtil.getLocalizedMessage(t);
+		String message = "";
+		//String message = StatusUtil.getLocalizedMessage(t);
 
 		return newError(message, t);
 	}
@@ -694,8 +662,11 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 			errorCode = ce.getStatus().getCode();
 		}
 
+		//return new Status(IStatus.ERROR, pluginId, errorCode, message,
+		//		StatusUtil.getCause(t));
+
 		return new Status(IStatus.ERROR, pluginId, errorCode, message,
-				StatusUtil.getCause(t));
+				t );
 	}
 
     /**
@@ -712,8 +683,8 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 	 *            The throwable from where the problem actually occurred.
 	 */
     public static void log(String message, Throwable t) {
-        IStatus status = StatusUtil.newStatus(IStatus.ERROR, message, t);
-        log(message, status);
+		//IStatus status = StatusUtil.newStatus(IStatus.ERROR, message, t);
+		//log(message, status);
     }
 
     /**
@@ -757,7 +728,7 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 		// context, but avoid creating the MultiStatus unnecessarily if message
 		// is the same
 		if (message != null && !message.equals(status.getMessage())) {
-			status = StatusUtil.newStatus(Collections.singletonList(status), message, null);
+			//status = StatusUtil.newStatus(Collections.singletonList(status), message, null);
         }
 		getDefault().getLog().log(status);
     }
@@ -775,9 +746,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return DecoratorManager the decorator manager
      * for the receiver.
      */
-    public DecoratorManager getDecoratorManager() {
-		return (DecoratorManager) e4Context.get(IDecoratorManager.class);
-    }
+//    public DecoratorManager getDecoratorManager() {
+//		return (DecoratorManager) e4Context.get(IDecoratorManager.class);
+//    }
 
     @Override
 	public void start(BundleContext context) throws Exception {
@@ -785,7 +756,7 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
         super.start(context);
         bundleContext = context;
 
-        JFaceUtil.initializeJFace();
+		//JFaceUtil.initializeJFace();
 
 		parseBidiArguments();
 		Window.setDefaultOrientation(getDefaultOrientation());
@@ -1037,9 +1008,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @see org.eclipse.swt.widgets.Display#setAppName
      * @since 3.0
      */
-    public String getAppName() {
-        return getProductInfo().getAppName();
-    }
+//    public String getAppName() {
+//        return getProductInfo().getAppName();
+//    }
 
     /**
      * Returns the name of the product.
@@ -1047,9 +1018,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the product name, or <code>null</code> if none
      * @since 3.0
      */
-    public String getProductName() {
-        return getProductInfo().getProductName();
-    }
+//    public String getProductName() {
+//        return getProductInfo().getProductName();
+//    }
 
     /**
      * Returns the image descriptors for the window image to use for this product.
@@ -1058,21 +1029,21 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      *         <code>null</code> if none
      * @since 3.0
      */
-    public ImageDescriptor[] getWindowImages() {
-        return getProductInfo().getWindowImages();
-    }
+//    public ImageDescriptor[] getWindowImages() {
+//        return getProductInfo().getWindowImages();
+//    }
 
     /**
      * Returns an instance that describes this plugin's product (formerly "primary
      * plugin").
      * @return ProductInfo the product info for the receiver
      */
-    private ProductInfo getProductInfo() {
-        if (productInfo == null) {
-			productInfo = new ProductInfo(Platform.getProduct());
-		}
-        return productInfo;
-    }
+//    private ProductInfo getProductInfo() {
+//        if (productInfo == null) {
+//			productInfo = new ProductInfo(Platform.getProduct());
+//		}
+//        return productInfo;
+//    }
 
     @Override
 	public void stop(BundleContext context) throws Exception {
@@ -1097,9 +1068,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the new wizard registry
      * @since 3.1
      */
-    public IWizardRegistry getNewWizardRegistry() {
-		return e4Context.get(NewWizardRegistry.class);
-    }
+//    public IWizardRegistry getNewWizardRegistry() {
+//		return e4Context.get(NewWizardRegistry.class);
+//    }
 
     /**
      * Return the import wizard registry.
@@ -1107,9 +1078,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the import wizard registry
      * @since 3.1
      */
-    public IWizardRegistry getImportWizardRegistry() {
-		return e4Context.get(ImportWizardRegistry.class);
-    }
+//    public IWizardRegistry getImportWizardRegistry() {
+//		return e4Context.get(ImportWizardRegistry.class);
+//    }
 
     /**
      * Return the export wizard registry.
@@ -1117,9 +1088,9 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
      * @return the export wizard registry
      * @since 3.1
      */
-    public IWizardRegistry getExportWizardRegistry() {
-		return e4Context.get(ExportWizardRegistry.class);
-    }
+//    public IWizardRegistry getExportWizardRegistry() {
+//		return e4Context.get(ExportWizardRegistry.class);
+//    }
 
     /**
      * FOR INTERNAL WORKBENCH USE ONLY.
@@ -1279,171 +1250,171 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 	 * Initialized the workbench plug-in with the e4 context
 	 * @param context the e4 context
 	 */
-	public void initializeContext(IEclipseContext context) {
-		e4Context = context;
-		e4Context.set(IPerspectiveRegistry.class.getName(), new ContextFunction() {
-
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (perspRegistry == null) {
-					perspRegistry = ContextInjectionFactory.make(
-							PerspectiveRegistry.class, e4Context);
-				}
-				return perspRegistry;
-			}
-		});
-		e4Context.set(IViewRegistry.class.getName(), new ContextFunction() {
-
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (viewRegistry == null) {
-					viewRegistry = ContextInjectionFactory.make(ViewRegistry.class,
-							e4Context);
-				}
-				return viewRegistry;
-			}
-		});
-		e4Context.set(ActionSetRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (actionSetRegistry == null) {
-					actionSetRegistry = new ActionSetRegistry();
-				}
-				return actionSetRegistry;
-			}
-		});
-		context.set(IDecoratorManager.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (decoratorManager == null) {
-					decoratorManager = new DecoratorManager();
-				}
-				return decoratorManager;
-			}
-		});
-		context.set(ExportWizardRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				return ExportWizardRegistry.getInstance();
-			}
-		});
-		context.set(ImportWizardRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				return ImportWizardRegistry.getInstance();
-			}
-		});
-		context.set(IIntroRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (introRegistry == null) {
-					introRegistry = new IntroRegistry();
-				}
-				return introRegistry;
-			}
-		});
-		context.set(NewWizardRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				return NewWizardRegistry.getInstance();
-			}
-		});
-		context.set(IWorkbenchOperationSupport.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (operationSupport == null) {
-					operationSupport = new WorkbenchOperationSupport();
-				}
-				return operationSupport;
-			}
-		});
-		context.set(PreferenceManager.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (preferenceManager == null) {
-					preferenceManager = new WorkbenchPreferenceManager(
-							PREFERENCE_PAGE_CATEGORY_SEPARATOR);
-
-					// Get the pages from the registry
-					PreferencePageRegistryReader registryReader = new PreferencePageRegistryReader(
-							getWorkbench());
-					registryReader.loadFromRegistry(Platform.getExtensionRegistry());
-					preferenceManager.addPages(registryReader.getTopLevelNodes());
-
-				}
-				return preferenceManager;
-			}
-		});
-		context.set(ISharedImages.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (sharedImages == null) {
-					sharedImages = new SharedImages();
-				}
-				return sharedImages;
-			}
-		});
-
-		context.set(IThemeRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (themeRegistry == null) {
-					themeRegistry = new ThemeRegistry();
-					ThemeRegistryReader reader = new ThemeRegistryReader();
-					reader.readThemes(Platform.getExtensionRegistry(), themeRegistry);
-				}
-				return themeRegistry;
-			}
-		});
-		context.set(IWorkingSetManager.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (workingSetManager == null) {
-					workingSetManager = new WorkingSetManager(bundleContext);
-					workingSetManager.restoreState();
-				}
-				return workingSetManager;
-			}
-		});
-		context.set(WorkingSetRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (workingSetRegistry == null) {
-					workingSetRegistry = new WorkingSetRegistry();
-					workingSetRegistry.load();
-				}
-				return workingSetRegistry;
-			}
-		});
-		context.set(IEditorRegistry.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (editorRegistry == null) {
-					editorRegistry = new EditorRegistry();
-				}
-				return editorRegistry;
-			}
-		});
-		context.set(EHelpService.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (helpService == null) {
-					helpService = new HelpServiceImpl();
-				}
-				return helpService;
-			}
-		});
-		context.set(ICommandHelpService.class.getName(), new ContextFunction() {
-			@Override
-			public Object compute(IEclipseContext context, String contextKey) {
-				if (commandHelpService == null) {
-					commandHelpService = ContextInjectionFactory.make(CommandHelpServiceImpl.class,
-							e4Context);
-				}
-				return commandHelpService;
-			}
-		});
-	}
+//	public void initializeContext(IEclipseContext context) {
+//		e4Context = context;
+//		e4Context.set(IPerspectiveRegistry.class.getName(), new ContextFunction() {
+//
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (perspRegistry == null) {
+//					perspRegistry = ContextInjectionFactory.make(
+//							PerspectiveRegistry.class, e4Context);
+//				}
+//				return perspRegistry;
+//			}
+//		});
+//		e4Context.set(IViewRegistry.class.getName(), new ContextFunction() {
+//
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (viewRegistry == null) {
+//					viewRegistry = ContextInjectionFactory.make(ViewRegistry.class,
+//							e4Context);
+//				}
+//				return viewRegistry;
+//			}
+//		});
+//		e4Context.set(ActionSetRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (actionSetRegistry == null) {
+//					actionSetRegistry = new ActionSetRegistry();
+//				}
+//				return actionSetRegistry;
+//			}
+//		});
+//		context.set(IDecoratorManager.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (decoratorManager == null) {
+//					decoratorManager = new DecoratorManager();
+//				}
+//				return decoratorManager;
+//			}
+//		});
+//		context.set(ExportWizardRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				return ExportWizardRegistry.getInstance();
+//			}
+//		});
+//		context.set(ImportWizardRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				return ImportWizardRegistry.getInstance();
+//			}
+//		});
+//		context.set(IIntroRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (introRegistry == null) {
+//					introRegistry = new IntroRegistry();
+//				}
+//				return introRegistry;
+//			}
+//		});
+//		context.set(NewWizardRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				return NewWizardRegistry.getInstance();
+//			}
+//		});
+//		context.set(IWorkbenchOperationSupport.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (operationSupport == null) {
+//					operationSupport = new WorkbenchOperationSupport();
+//				}
+//				return operationSupport;
+//			}
+//		});
+//		context.set(PreferenceManager.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (preferenceManager == null) {
+//					preferenceManager = new WorkbenchPreferenceManager(
+//							PREFERENCE_PAGE_CATEGORY_SEPARATOR);
+//
+//					// Get the pages from the registry
+//					PreferencePageRegistryReader registryReader = new PreferencePageRegistryReader(
+//							getWorkbench());
+//					registryReader.loadFromRegistry(Platform.getExtensionRegistry());
+//					preferenceManager.addPages(registryReader.getTopLevelNodes());
+//
+//				}
+//				return preferenceManager;
+//			}
+//		});
+//		context.set(ISharedImages.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (sharedImages == null) {
+//					sharedImages = new SharedImages();
+//				}
+//				return sharedImages;
+//			}
+//		});
+//
+//		context.set(IThemeRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (themeRegistry == null) {
+//					themeRegistry = new ThemeRegistry();
+//					ThemeRegistryReader reader = new ThemeRegistryReader();
+//					reader.readThemes(Platform.getExtensionRegistry(), themeRegistry);
+//				}
+//				return themeRegistry;
+//			}
+//		});
+//		context.set(IWorkingSetManager.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (workingSetManager == null) {
+//					workingSetManager = new WorkingSetManager(bundleContext);
+//					workingSetManager.restoreState();
+//				}
+//				return workingSetManager;
+//			}
+//		});
+//		context.set(WorkingSetRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (workingSetRegistry == null) {
+//					workingSetRegistry = new WorkingSetRegistry();
+//					workingSetRegistry.load();
+//				}
+//				return workingSetRegistry;
+//			}
+//		});
+//		context.set(IEditorRegistry.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (editorRegistry == null) {
+//					editorRegistry = new EditorRegistry();
+//				}
+//				return editorRegistry;
+//			}
+//		});
+//		context.set(EHelpService.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (helpService == null) {
+//					helpService = new HelpServiceImpl();
+//				}
+//				return helpService;
+//			}
+//		});
+//		context.set(ICommandHelpService.class.getName(), new ContextFunction() {
+//			@Override
+//			public Object compute(IEclipseContext context, String contextKey) {
+//				if (commandHelpService == null) {
+//					commandHelpService = ContextInjectionFactory.make(CommandHelpServiceImpl.class,
+//							e4Context);
+//				}
+//				return commandHelpService;
+//			}
+//		});
+//	}
 
 	/*
 	 * Return the debug options service, if available.
@@ -1472,13 +1443,13 @@ public class WorkbenchPlugin extends AbstractUIPlugin {
 	 * @see PlatformUI#getTestableObject()
 	 * @return TestableObject provided via service or <code>null</code>
 	 */
-	public TestableObject getTestableObject() {
-		if (bundleContext == null)
-			return null;
-		if (testableTracker == null) {
-			testableTracker = new ServiceTracker(bundleContext, TestableObject.class.getName(), null);
-			testableTracker.open();
-		}
-		return (TestableObject) testableTracker.getService();
-	}
+//	public TestableObject getTestableObject() {
+//		if (bundleContext == null)
+//			return null;
+//		if (testableTracker == null) {
+//			testableTracker = new ServiceTracker(bundleContext, TestableObject.class.getName(), null);
+//			testableTracker.open();
+//		}
+//		return (TestableObject) testableTracker.getService();
+//	}
 }

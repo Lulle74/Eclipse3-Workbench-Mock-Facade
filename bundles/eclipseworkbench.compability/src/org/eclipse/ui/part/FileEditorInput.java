@@ -21,16 +21,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
@@ -72,8 +68,8 @@ public class FileEditorInput extends PlatformObject implements IFileEditorInput,
 			return true;
 		} catch (CoreException e) {
 			//this can only happen if the file system is not available for this scheme
-			IDEWorkbenchPlugin.log(
-					"Failed to obtain file store for resource", e); //$NON-NLS-1$
+//			IDEWorkbenchPlugin.log(
+//					"Failed to obtain file store for resource", e); //$NON-NLS-1$
 			return false;
 		}
 
@@ -131,9 +127,10 @@ public class FileEditorInput extends PlatformObject implements IFileEditorInput,
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		IContentType contentType = IDE.getContentType(file);
-		return PlatformUI.getWorkbench().getEditorRegistry()
-				.getImageDescriptor(file.getName(), contentType);
+		return null;
+//		IContentType contentType = IDE.getContentType(file);
+//		return PlatformUI.getWorkbench().getEditorRegistry()
+//				.getImageDescriptor(file.getName(), contentType);
 	}
 
 	@Override
@@ -190,8 +187,8 @@ public class FileEditorInput extends PlatformObject implements IFileEditorInput,
 			return Path.fromOSString(localFile.getAbsolutePath());
 		} catch (CoreException e) {
 			//this can only happen if the file system is not available for this scheme
-			IDEWorkbenchPlugin.log(
-					"Failed to obtain file store for resource", e); //$NON-NLS-1$
+//			IDEWorkbenchPlugin.log(
+//					"Failed to obtain file store for resource", e); //$NON-NLS-1$
 			throw new RuntimeException(e);
 		}
 	}

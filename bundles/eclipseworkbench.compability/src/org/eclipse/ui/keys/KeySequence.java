@@ -301,9 +301,10 @@ public final class KeySequence implements Comparable {
      * @return A string representation for this key sequence using the default
      *         look; never <code>null</code>.
      */
-    public String format() {
-        return KeyFormatterFactory.getDefault().format(this);
-    }
+//    public String format() {
+//		return "";
+//		//return KeyFormatterFactory.getDefault().format(this);
+//    }
 
     /**
      * Returns the list of key strokes for this key sequence.
@@ -381,6 +382,7 @@ public final class KeySequence implements Comparable {
      */
     @Override
 	public String toString() {
-        return KeyFormatterFactory.getFormalKeyFormatter().format(this);
+		return "";
+		//return KeyFormatterFactory.getFormalKeyFormatter().format(this);
     }
 }

@@ -11,7 +11,6 @@
 package org.eclipse.ui.commands;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.internal.commands.CommandImageManager;
 import org.eclipse.ui.services.IDisposable;
 
 /**
@@ -49,18 +48,18 @@ public interface ICommandImageService extends IDisposable {
 	/**
 	 * The type of image to display in the default case.
 	 */
-	public static final int TYPE_DEFAULT = CommandImageManager.TYPE_DEFAULT;
+	//public static final int TYPE_DEFAULT = CommandImageManager.TYPE_DEFAULT;
 
 	/**
 	 * The type of image to display if the corresponding command is disabled.
 	 */
-	public static final int TYPE_DISABLED = CommandImageManager.TYPE_DISABLED;
+	//public static final int TYPE_DISABLED = CommandImageManager.TYPE_DISABLED;
 
 	/**
 	 * The type of image to display if the mouse is hovering over the command
 	 * and the command is enabled.
 	 */
-	public static final int TYPE_HOVER = CommandImageManager.TYPE_HOVER;
+	//public static final int TYPE_HOVER = CommandImageManager.TYPE_HOVER;
 
 	/**
 	 * The default image style. This is provided when no style is requested or

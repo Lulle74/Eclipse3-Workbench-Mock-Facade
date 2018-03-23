@@ -18,7 +18,6 @@ import java.util.TreeSet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.internal.keys.NativeKeyFormatter;
 
 /**
  * A utility class for converting SWT events into key strokes.
@@ -398,7 +397,7 @@ public final class SWTKeySupport {
         return accelerator;
     }
 
-    private static final IKeyFormatter NATIVE_FORMATTER = new NativeKeyFormatter();
+	//private static final IKeyFormatter NATIVE_FORMATTER = new NativeKeyFormatter();
 
     /**
      * Provides an instance of <code>IKeyFormatter</code> appropriate for the
@@ -407,9 +406,9 @@ public final class SWTKeySupport {
      * @return an instance of <code>IKeyFormatter</code> appropriate for the
      *         current instance; never <code>null</code>.
      */
-    public static IKeyFormatter getKeyFormatterForPlatform() {
-        return NATIVE_FORMATTER;
-    }
+//    public static IKeyFormatter getKeyFormatterForPlatform() {
+//        return NATIVE_FORMATTER;
+//    }
 
     /**
      * Makes sure that a fully-modified character is converted to the normal

@@ -29,9 +29,9 @@ public abstract class RulerColumnTarget {
 	RulerColumnTarget() {
 	}
 
-	public static RulerColumnTarget createAllTarget() {
-		return new AllTarget();
-	}
+//	public static RulerColumnTarget createAllTarget() {
+//		return new AllTarget();
+//	}
 
 	public static RulerColumnTarget createOrTarget(RulerColumnTarget either, RulerColumnTarget or) {
 		Assert.isLegal(or != null || either != null);
@@ -55,30 +55,30 @@ public abstract class RulerColumnTarget {
 	}
 }
 
-final class AllTarget extends RulerColumnTarget {
-	AllTarget() {
-	}
-
-	@Override
-	public boolean matchesContentType(IContentType contentType) {
-		return true;
-	}
-
-	@Override
-	public boolean matchesEditorId(String editorId) {
-		return true;
-	}
-
-	@Override
-	public boolean matchesClass(Class<?> clazz) {
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "All"; //$NON-NLS-1$
-	}
-}
+//final class AllTarget extends RulerColumnTarget {
+//	AllTarget() {
+//	}
+//
+//	@Override
+//	public boolean matchesContentType(IContentType contentType) {
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean matchesEditorId(String editorId) {
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean matchesClass(Class<?> clazz) {
+//		return true;
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return "All"; //$NON-NLS-1$
+//	}
+//}
 
 final class OrTarget extends RulerColumnTarget {
 	private final RulerColumnTarget fEither;

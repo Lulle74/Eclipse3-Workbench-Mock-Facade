@@ -19,10 +19,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.internal.InternalSaveable;
-import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.progress.IJobRunnable;
 
 /**
@@ -250,22 +247,22 @@ public abstract class Saveable extends InternalSaveable implements IAdaptable {
 	 *
 	 * @since 3.3
 	 */
-	public void disableUI(IWorkbenchPart[] parts, boolean closing) {
-		for (IWorkbenchPart workbenchPart : parts) {
-			Composite paneComposite = (Composite) ((PartSite) workbenchPart.getSite()).getModel().getWidget();
-			Control[] paneChildren = paneComposite.getChildren();
-			Composite toDisable = ((Composite) paneChildren[0]);
-			toDisable.setEnabled(false);
-			if (waitCursor == null) {
-				waitCursor = workbenchPart.getSite().getWorkbenchWindow().getShell().getDisplay()
-						.getSystemCursor(SWT.CURSOR_WAIT);
-			}
-			if (waitCursor.equals(paneComposite.getCursor())) {
-				originalCursor = paneComposite.getCursor();
-				paneComposite.setCursor(waitCursor);
-			}
-		}
-	}
+//	public void disableUI(IWorkbenchPart[] parts, boolean closing) {
+//		for (IWorkbenchPart workbenchPart : parts) {
+//			Composite paneComposite = (Composite) ((PartSite) workbenchPart.getSite()).getModel().getWidget();
+//			Control[] paneChildren = paneComposite.getChildren();
+//			Composite toDisable = ((Composite) paneChildren[0]);
+//			toDisable.setEnabled(false);
+//			if (waitCursor == null) {
+//				waitCursor = workbenchPart.getSite().getWorkbenchWindow().getShell().getDisplay()
+//						.getSystemCursor(SWT.CURSOR_WAIT);
+//			}
+//			if (waitCursor.equals(paneComposite.getCursor())) {
+//				originalCursor = paneComposite.getCursor();
+//				paneComposite.setCursor(waitCursor);
+//			}
+//		}
+//	}
 
 	/**
 	 * Enables the UI of the given parts containing this saveable after a
@@ -281,22 +278,22 @@ public abstract class Saveable extends InternalSaveable implements IAdaptable {
 	 *
 	 * @since 3.3
 	 */
-	public void enableUI(IWorkbenchPart[] parts) {
-		for (IWorkbenchPart workbenchPart : parts) {
-			Composite paneComposite = (Composite) ((PartSite) workbenchPart.getSite()).getModel().getWidget();
-			Control[] paneChildren = paneComposite.getChildren();
-			Composite toEnable = ((Composite) paneChildren[0]);
-			paneComposite.setCursor(originalCursor);
-			if (waitCursor != null) {
-				/*
-				 * waitCursor is always the System SWT.CURSOR_WAIT instance and
-				 * should never be disposed
-				 */
-				waitCursor = null;
-			}
-			toEnable.setEnabled(true);
-		}
-	}
+//	public void enableUI(IWorkbenchPart[] parts) {
+//		for (IWorkbenchPart workbenchPart : parts) {
+//			Composite paneComposite = (Composite) ((PartSite) workbenchPart.getSite()).getModel().getWidget();
+//			Control[] paneChildren = paneComposite.getChildren();
+//			Composite toEnable = ((Composite) paneChildren[0]);
+//			paneComposite.setCursor(originalCursor);
+//			if (waitCursor != null) {
+//				/*
+//				 * waitCursor is always the System SWT.CURSOR_WAIT instance and
+//				 * should never be disposed
+//				 */
+//				waitCursor = null;
+//			}
+//			toEnable.setEnabled(true);
+//		}
+//	}
 
 	/**
 	 * This implementation of {@link IAdaptable#getAdapter(Class)} returns

@@ -25,15 +25,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Event;
@@ -43,14 +40,9 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * A menu for perspective selection.
@@ -195,9 +187,9 @@ public abstract class PerspectiveMenu extends ContributionItem {
                     .next();
             final IAction action = getAction(descriptor.getId());
             if (action != null) {
-                if (WorkbenchActivityHelper.filterItem(action)) {
-					continue;
-				}
+//                if (WorkbenchActivityHelper.filterItem(action)) {
+//					continue;
+//				}
                 actions.add(action);
             }
         }
@@ -207,16 +199,16 @@ public abstract class PerspectiveMenu extends ContributionItem {
             manager.add((IAction) i.next());
         }
 
-        if (PrefUtil
-                .getAPIPreferenceStore()
-                .getBoolean(
-                        IWorkbenchPreferenceConstants.SHOW_OTHER_IN_PERSPECTIVE_MENU)) {
-        	// Add a separator and then "Other..."
-        	if (actions.size() > 0) {
-				manager.add(new Separator());
-			}
-			manager.add(openOtherAction);
-        }
+//        if (PrefUtil
+//                .getAPIPreferenceStore()
+//                .getBoolean(
+//                        IWorkbenchPreferenceConstants.SHOW_OTHER_IN_PERSPECTIVE_MENU)) {
+//        	// Add a separator and then "Other..."
+//        	if (actions.size() > 0) {
+//				manager.add(new Separator());
+//			}
+//			manager.add(openOtherAction);
+//        }
     }
 
     /**
@@ -262,9 +254,9 @@ public abstract class PerspectiveMenu extends ContributionItem {
 		for (String perspectiveId : ids) {
 			IPerspectiveDescriptor desc = reg.findPerspectiveWithId(perspectiveId);
             if (desc != null && !list.contains(desc)) {
-                if (WorkbenchActivityHelper.filterItem(desc)) {
-					continue;
-				}
+//                if (WorkbenchActivityHelper.filterItem(desc)) {
+//					continue;
+//				}
                 list.add(desc);
             }
         }
@@ -365,21 +357,21 @@ public abstract class PerspectiveMenu extends ContributionItem {
 		try {
 			handlerService.executeCommand(IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, null);
 		} catch (ExecutionException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
-							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
+//			StatusManager.getManager().handle(
+//					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
+//							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
 		} catch (NotDefinedException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
-							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
+//			StatusManager.getManager().handle(
+//					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
+//							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
 		} catch (NotEnabledException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
-							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
+//			StatusManager.getManager().handle(
+//					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
+//							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
 		} catch (NotHandledException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
-							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
+//			StatusManager.getManager().handle(
+//					new Status(IStatus.WARNING, WorkbenchPlugin.PI_WORKBENCH,
+//							"Failed to execute " + IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, e)); //$NON-NLS-1$
 		}
 	}
 

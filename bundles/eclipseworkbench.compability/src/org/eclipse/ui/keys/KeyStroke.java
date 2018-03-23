@@ -301,9 +301,9 @@ public final class KeyStroke implements Comparable {
      * @return A string representation for this key stroke using the default
      *         look; never <code>null</code>.
      */
-    public String format() {
-        return KeyFormatterFactory.getDefault().format(this);
-    }
+//    public String format() {
+//        return KeyFormatterFactory.getDefault().format(this);
+//    }
 
     /**
      * Returns the set of modifier keys for this key stroke.
@@ -359,6 +359,7 @@ public final class KeyStroke implements Comparable {
      */
     @Override
 	public String toString() {
-        return KeyFormatterFactory.getFormalKeyFormatter().format(this);
+		return "";
+		//return KeyFormatterFactory.getFormalKeyFormatter().format(this);
     }
 }

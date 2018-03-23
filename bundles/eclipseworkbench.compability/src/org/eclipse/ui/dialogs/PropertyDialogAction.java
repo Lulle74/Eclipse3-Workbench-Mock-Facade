@@ -22,8 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.dialogs.PropertyDialog;
-import org.eclipse.ui.internal.dialogs.PropertyPageContributorManager;
 
 /**
  * Standard action for opening a Property Pages Dialog on the currently selected
@@ -103,7 +101,8 @@ public class PropertyDialogAction extends SelectionProviderAction {
 	 * @return boolean
 	 */
 	private boolean hasPropertyPagesFor(IStructuredSelection object) {
-		return PropertyPageContributorManager.getManager().getApplicableContributors(object).size() != 0;
+		//return PropertyPageContributorManager.getManager().getApplicableContributors(object).size() != 0;
+		return false;
 	}
 
 	/**
@@ -170,8 +169,9 @@ public class PropertyDialogAction extends SelectionProviderAction {
 		if (getStructuredSelection().isEmpty())
 			return null;
 
-		return PropertyDialog
-				.createDialogOn(shellProvider.getShell(), initialPageId, getStructuredSelection());
+		return null;
+		//return PropertyDialog
+		//		.createDialogOn(shellProvider.getShell(), initialPageId, getStructuredSelection());
 	}
 
 

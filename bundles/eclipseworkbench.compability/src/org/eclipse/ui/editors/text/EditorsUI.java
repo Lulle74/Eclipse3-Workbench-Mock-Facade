@@ -15,19 +15,6 @@ import java.nio.charset.UnmappableCharacterException;
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.source.ISharedTextColors;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.editors.text.EditorsPlugin;
-import org.eclipse.ui.internal.editors.text.NLSUtility;
-import org.eclipse.ui.keys.IBindingService;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
-import org.eclipse.ui.texteditor.AnnotationTypeLookup;
-import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
-import org.eclipse.ui.texteditor.spelling.SpellingService;
 
 
 /**
@@ -56,27 +43,27 @@ public final class EditorsUI {
 	 *
 	 * @return the annotation type lookup
 	 */
-	public static AnnotationTypeLookup getAnnotationTypeLookup() {
-		return EditorsPlugin.getDefault().getAnnotationTypeLookup();
-	}
+//	public static AnnotationTypeLookup getAnnotationTypeLookup() {
+//		return EditorsPlugin.getDefault().getAnnotationTypeLookup();
+//	}
 
 	/**
 	 * Returns the annotation preference lookup of this plug-in.
 	 *
 	 * @return the annotation preference lookup
 	 */
-	public static AnnotationPreferenceLookup getAnnotationPreferenceLookup() {
-		return EditorsPlugin.getDefault().getAnnotationPreferenceLookup();
-	}
+//	public static AnnotationPreferenceLookup getAnnotationPreferenceLookup() {
+//		return EditorsPlugin.getDefault().getAnnotationPreferenceLookup();
+//	}
 
 	/**
 	 * Returns the preference store of this plug-in.
 	 *
 	 * @return this plug-in's preference store
 	 */
-	public static IPreferenceStore getPreferenceStore() {
-		return EditorsPlugin.getDefault().getPreferenceStore();
-	}
+//	public static IPreferenceStore getPreferenceStore() {
+//		return EditorsPlugin.getDefault().getPreferenceStore();
+//	}
 
 	/**
 	 * Removes all preference which are handled by this plug-in's
@@ -101,9 +88,9 @@ public final class EditorsUI {
 	 *
 	 * @param store the preference store to mark
 	 */
-	public static void useAnnotationsPreferencePage(IPreferenceStore store) {
-		MarkerAnnotationPreferences.useAnnotationsPreferencePage(store);
-	}
+//	public static void useAnnotationsPreferencePage(IPreferenceStore store) {
+//		MarkerAnnotationPreferences.useAnnotationsPreferencePage(store);
+//	}
 
 	/**
 	 * Removes all preference which are handled by this plug-in's
@@ -128,13 +115,13 @@ public final class EditorsUI {
 	 *
 	 * @param store the preference store to mark
 	 */
-	public static void useQuickDiffPreferencePage(IPreferenceStore store) {
-		MarkerAnnotationPreferences.useQuickDiffPreferencePage(store);
-
-		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON);
-		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_CHARACTER_MODE);
-		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_DEFAULT_PROVIDER);
-	}
+//	public static void useQuickDiffPreferencePage(IPreferenceStore store) {
+//		MarkerAnnotationPreferences.useQuickDiffPreferencePage(store);
+//
+//		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON);
+//		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_CHARACTER_MODE);
+//		store.setToDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_DEFAULT_PROVIDER);
+//	}
 
 	private EditorsUI() {
 		// block instantiation
@@ -147,10 +134,10 @@ public final class EditorsUI {
 	 * @see org.eclipse.core.runtime.Plugin#getPluginPreferences()
 	 * @deprecated As of 3.5, replaced by {@link #getPreferenceStore()}
 	 */
-	@Deprecated
-	public static org.eclipse.core.runtime.Preferences getPluginPreferences() {
-		return EditorsPlugin.getDefault().getPluginPreferences();
-	}
+//	@Deprecated
+//	public static org.eclipse.core.runtime.Preferences getPluginPreferences() {
+//		return EditorsPlugin.getDefault().getPluginPreferences();
+//	}
 
 	/**
 	 * Returns the spelling service.
@@ -158,9 +145,9 @@ public final class EditorsUI {
 	 * @return the spelling service
 	 * @since 3.1
 	 */
-	public static SpellingService getSpellingService() {
-		return EditorsPlugin.getDefault().getSpellingService();
-	}
+//	public static SpellingService getSpellingService() {
+//		return EditorsPlugin.getDefault().getSpellingService();
+//	}
 
 	/**
 	 * Returns the shared text colors of this plug-in.
@@ -168,9 +155,9 @@ public final class EditorsUI {
 	 * @return the shared text colors
 	 * @since 3.3
 	 */
-	public static ISharedTextColors getSharedTextColors() {
-		return EditorsPlugin.getDefault().getSharedTextColors();
-	}
+//	public static ISharedTextColors getSharedTextColors() {
+//		return EditorsPlugin.getDefault().getSharedTextColors();
+//	}
 
 	/**
 	 * Returns the registry that contains the hyperlink detectors contributed
@@ -180,9 +167,9 @@ public final class EditorsUI {
 	 * @return the hyperlink detector registry
 	 * @since 3.3
 	 */
-	public static HyperlinkDetectorRegistry getHyperlinkDetectorRegistry() {
-		return EditorsPlugin.getDefault().getHyperlinkDetectorRegistry();
-	}
+//	public static HyperlinkDetectorRegistry getHyperlinkDetectorRegistry() {
+//		return EditorsPlugin.getDefault().getHyperlinkDetectorRegistry();
+//	}
 
 	// --------------- Status codes for this plug-in ---------------
 
@@ -230,19 +217,19 @@ public final class EditorsUI {
 	 *			preference is disabled or the binding service is unavailable
 	 * @since 3.3
 	 */
-	public static final String getTooltipAffordanceString() {
-		if (!getPreferenceStore().getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
-			return null;
-
-		IBindingService bindingService= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-		if (bindingService == null)
-			return null;
-
-		String keySequence= bindingService.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
-		if (keySequence == null)
-			return ""; //$NON-NLS-1$
-
-		return NLSUtility.format(TextEditorMessages.Editor_toolTip_affordance, keySequence);
-	}
+//	public static final String getTooltipAffordanceString() {
+//		if (!getPreferenceStore().getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
+//			return null;
+//
+//		IBindingService bindingService= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+//		if (bindingService == null)
+//			return null;
+//
+//		String keySequence= bindingService.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
+//		if (keySequence == null)
+//			return ""; //$NON-NLS-1$
+//
+//		return NLSUtility.format(TextEditorMessages.Editor_toolTip_affordance, keySequence);
+//	}
 
 }

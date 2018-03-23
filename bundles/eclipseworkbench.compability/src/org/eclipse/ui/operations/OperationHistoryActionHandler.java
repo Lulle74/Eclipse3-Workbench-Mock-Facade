@@ -13,7 +13,6 @@ package org.eclipse.ui.operations;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.IAdvancedUndoableOperation2;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IOperationHistoryListener;
 import org.eclipse.core.commands.operations.IUndoContext;
@@ -23,7 +22,6 @@ import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -37,11 +35,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.misc.StatusUtil;
-import org.eclipse.ui.internal.operations.TimeTriggeredProgressMonitorDialog;
-import org.eclipse.ui.part.MultiPageEditorSite;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * <p>
@@ -101,11 +94,11 @@ public abstract class OperationHistoryActionHandler extends Action implements
 				dispose();
 				// Special case for MultiPageEditorSite
 				// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=103379
-			} else if ((site instanceof MultiPageEditorSite)
-					&& (part.equals(((MultiPageEditorSite) site)
-							.getMultiPageEditor()))) {
-				dispose();
-			}
+			} //else if ((site instanceof MultiPageEditorSite)
+				//	&& (part.equals(((MultiPageEditorSite) site)
+				//			.getMultiPageEditor()))) {
+				//dispose();
+				//}
 		}
 
 		/**
@@ -182,7 +175,7 @@ public abstract class OperationHistoryActionHandler extends Action implements
 
 	private IOperationHistoryListener historyListener = new HistoryListener();
 
-	private TimeTriggeredProgressMonitorDialog progressDialog;
+	//private TimeTriggeredProgressMonitorDialog progressDialog;
 
 	private IUndoContext undoContext = null;
 
@@ -223,7 +216,7 @@ public abstract class OperationHistoryActionHandler extends Action implements
 
 		site.getPage().removePartListener(partListener);
 		site = null;
-		progressDialog = null;
+		//progressDialog = null;
 		// We do not flush the history for our undo context because it may be
 		// used elsewhere. It is up to clients to clean up the history
 		// appropriately.
@@ -285,9 +278,9 @@ public abstract class OperationHistoryActionHandler extends Action implements
 		}
 
 		Shell parent = getWorkbenchWindow().getShell();
-		progressDialog = new TimeTriggeredProgressMonitorDialog(parent,
-				getWorkbenchWindow().getWorkbench().getProgressService()
-						.getLongOperationTime());
+//		progressDialog = new TimeTriggeredProgressMonitorDialog(parent,
+//				getWorkbenchWindow().getWorkbench().getProgressService()
+//						.getLongOperationTime());
 		IRunnableWithProgress runnable = pm -> {
 try {
 		runCommand(pm);
@@ -298,29 +291,29 @@ try {
 		throw new InvocationTargetException(e);
 }
 };
-		try {
-			boolean runInBackground = false;
-			if (getOperation() instanceof IAdvancedUndoableOperation2) {
-				runInBackground = ((IAdvancedUndoableOperation2) getOperation())
-						.runInBackground();
-			}
-			progressDialog.run(runInBackground, true, runnable);
-		} catch (InvocationTargetException e) {
-			Throwable t = e.getTargetException();
-			if (t == null) {
-				reportException(e);
-			} else {
-				reportException(t);
-			}
-		} catch (InterruptedException e) {
-			// Operation was cancelled and acknowledged by runnable with this
-			// exception.
-			// Do nothing.
-		} catch (OperationCanceledException e) {
-			// the operation was cancelled. Do nothing.
-		} finally {
-			progressDialog = null;
-		}
+//		try {
+//			boolean runInBackground = false;
+//			if (getOperation() instanceof IAdvancedUndoableOperation2) {
+//				runInBackground = ((IAdvancedUndoableOperation2) getOperation())
+//						.runInBackground();
+//			}
+//			progressDialog.run(runInBackground, true, runnable);
+//		} catch (InvocationTargetException e) {
+//			Throwable t = e.getTargetException();
+//			if (t == null) {
+//				reportException(e);
+//			} else {
+//				reportException(t);
+//			}
+//		} catch (InterruptedException e) {
+//			// Operation was cancelled and acknowledged by runnable with this
+//			// exception.
+//			// Do nothing.
+//		} catch (OperationCanceledException e) {
+//			// the operation was cancelled. Do nothing.
+//		} finally {
+//			progressDialog = null;
+//		}
 	}
 
 	abstract IStatus runCommand(IProgressMonitor pm) throws ExecutionException;
@@ -332,9 +325,9 @@ try {
 			return (T) undoContext;
 		}
 		if (adapter.equals(IProgressMonitor.class)) {
-			if (progressDialog != null) {
-				return (T) progressDialog.getProgressMonitor();
-			}
+//			if (progressDialog != null) {
+//				return (T) progressDialog.getProgressMonitor();
+//			}
 		}
 		if (site != null) {
 			if (adapter.equals(Shell.class)) {
@@ -457,24 +450,24 @@ try {
 	/*
 	 * Report the specified exception to the log and to the user.
 	 */
-	final void reportException(Throwable t) {
-		// get any nested exceptions
-		Throwable nestedException = StatusUtil.getCause(t);
-		Throwable exception = (nestedException == null) ? t : nestedException;
-
-		// Messages
-		String exceptionMessage = exception.getMessage();
-		if (exceptionMessage == null) {
-			exceptionMessage = WorkbenchMessages.WorkbenchWindow_exceptionMessage;
-		}
-		IStatus status = StatusUtil.newStatus(WorkbenchPlugin.PI_WORKBENCH,
-				exceptionMessage, exception);
-
-		// Log and show the problem
-		WorkbenchPlugin.log(exceptionMessage, status);
-		StatusUtil.handleStatus(status, StatusManager.SHOW,
-				getWorkbenchWindow().getShell());
-	}
+//	final void reportException(Throwable t) {
+//		// get any nested exceptions
+//		Throwable nestedException = StatusUtil.getCause(t);
+//		Throwable exception = (nestedException == null) ? t : nestedException;
+//
+//		// Messages
+//		String exceptionMessage = exception.getMessage();
+//		if (exceptionMessage == null) {
+//			exceptionMessage = WorkbenchMessages.WorkbenchWindow_exceptionMessage;
+//		}
+//		IStatus status = StatusUtil.newStatus(WorkbenchPlugin.PI_WORKBENCH,
+//				exceptionMessage, exception);
+//
+//		// Log and show the problem
+//		WorkbenchPlugin.log(exceptionMessage, status);
+//		StatusUtil.handleStatus(status, StatusManager.SHOW,
+//				getWorkbenchWindow().getShell());
+//	}
 
 	/*
 	 * Answer true if the receiver is not valid for running commands, accessing

@@ -13,17 +13,9 @@ package org.eclipse.ui.texteditor;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
-import org.eclipse.jface.text.revisions.IRevisionRulerColumnExtension;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.internal.editors.text.EditorsPlugin;
-import org.eclipse.ui.internal.editors.text.EditorsPluginPreferenceInitializer;
-import org.eclipse.ui.texteditor.spelling.SpellingService;
 
 
 /**
@@ -657,99 +649,100 @@ public class AbstractDecoratedTextEditorPreferenceConstants {
 	 *
   	* @param store the preference store to be initialized
   	*/
-	public static void initializeDefaultValues(IPreferenceStore store) {
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_ANNOTATIONS_PREFERENCE_PAGE, false);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_QUICK_DIFF_PREFERENCE_PAGE, false);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, 4);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS, false);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNDO_HISTORY_SIZE, 200);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN, false);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN, 80);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, false);
-
-		if (!store.getBoolean(USE_QUICK_DIFF_PREFERENCE_PAGE)) {
-			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, true);
-			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_CHARACTER_MODE, false);
-			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_DEFAULT_PROVIDER, "org.eclipse.ui.internal.editors.quickdiff.LastSaveReferenceProvider"); //$NON-NLS-1$
-		}
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER, true);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION, false);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION_IN_OVERVIEW_RULER, false);
-		PreferenceConverter.setDefault(store, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION_COLOR, new RGB(0, 0, 0));
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_USE_CUSTOM_CARETS, false);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_WIDE_CARET, true);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_SATURATED_COLORS_IN_OVERVIEW_RULER, false);
-
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SELECTION_FOREGROUND_DEFAULT_COLOR, true);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SELECTION_BACKGROUND_DEFAULT_COLOR, true);
-
-		store.setDefault(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT, true);
-
-		store.setDefault(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT, true);
-
-		String mod1Name= Action.findModifierString(SWT.MOD1);	// SWT.COMMAND on MAC; SWT.CONTROL elsewhere
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED, true);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_COLOR_SYSTEM_DEFAULT, true);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER, mod1Name);
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER_MASK, SWT.MOD1);
-
-		HyperlinkDetectorDescriptor[] descriptors= EditorsUI.getHyperlinkDetectorRegistry().getHyperlinkDetectorDescriptors();
-		for (int i= 0; i < descriptors.length; i++) {
-			int stateMask= computeStateMask(descriptors[i].getModifierKeys());
-			if (stateMask == SWT.SHIFT) {
-				EditorsPlugin.logErrorMessage("The '" + descriptors[i].getId() + "' hyperlink detector specifies 'Shift' as modifier. This is not allowed and hence replaced with the default modifier."); //$NON-NLS-1$ //$NON-NLS-2$
-				stateMask= -1;
-			}
-			store.setDefault(descriptors[i].getId() + HyperlinkDetectorDescriptor.STATE_MASK_POSTFIX, stateMask);
-		}
-
-		boolean isInstalled= EditorsUI.getSpellingService().getSpellingEngineDescriptors().length > 0;
-		store.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, isInstalled);
-		store.setDefault(SpellingService.PREFERENCE_SPELLING_ENGINE, ""); //$NON-NLS-1$
-
-		store.setDefault(SHOW_RANGE_INDICATOR, true);
-		store.setDefault(REVISION_ASK_BEFORE_QUICKDIFF_SWITCH, MessageDialogWithToggle.ALWAYS);
-
-		store.setDefault(AbstractTextEditor.PREFERENCE_RULER_CONTRIBUTIONS, ""); //$NON-NLS-1$
-		store.setDefault(REVISION_RULER_RENDERING_MODE, IRevisionRulerColumnExtension.AGE.name());
-		store.setDefault(REVISION_RULER_SHOW_AUTHOR, false);
-		store.setDefault(REVISION_RULER_SHOW_REVISION, false);
-
-		store.setDefault(EDITOR_WARN_IF_INPUT_DERIVED, true);
-		store.setDefault(EDITOR_SMART_HOME_END, true);
-
-		store.setDefault(EDITOR_SHOW_WHITESPACE_CHARACTERS, false);
-		store.setDefault(EDITOR_SHOW_LEADING_SPACES, true);
-		store.setDefault(EDITOR_SHOW_ENCLOSED_SPACES, true);
-		store.setDefault(EDITOR_SHOW_TRAILING_SPACES, true);
-		store.setDefault(EDITOR_SHOW_LEADING_IDEOGRAPHIC_SPACES, true);
-		store.setDefault(EDITOR_SHOW_ENCLOSED_IDEOGRAPHIC_SPACES, true);
-		store.setDefault(EDITOR_SHOW_TRAILING_IDEOGRAPHIC_SPACES, true);
-		store.setDefault(EDITOR_SHOW_LEADING_TABS, true);
-		store.setDefault(EDITOR_SHOW_ENCLOSED_TABS, true);
-		store.setDefault(EDITOR_SHOW_TRAILING_TABS, true);
-		store.setDefault(EDITOR_SHOW_CARRIAGE_RETURN, true);
-		store.setDefault(EDITOR_SHOW_LINE_FEED, true);
-		store.setDefault(EDITOR_WHITESPACE_CHARACTER_ALPHA_VALUE, 80);
-
-		store.setDefault(EDITOR_TEXT_DRAG_AND_DROP_ENABLED, true);
-		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
-		store.setDefault(EDITOR_HOVER_ENRICH_MODE, 0);
-		store.setDefault(AbstractTextEditor.PREFERENCE_WORD_WRAP_ENABLED, false);
-
-		MarkerAnnotationPreferences.initializeDefaultValues(store);
-
-		EditorsPluginPreferenceInitializer.setThemeBasedPreferences(store, false);
-	}
+//	public static void initializeDefaultValues(IPreferenceStore store) {
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_ANNOTATIONS_PREFERENCE_PAGE, false);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_QUICK_DIFF_PREFERENCE_PAGE, false);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, 4);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS, false);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNDO_HISTORY_SIZE, 200);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN, false);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN, 80);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, false);
+//
+//		if (!store.getBoolean(USE_QUICK_DIFF_PREFERENCE_PAGE)) {
+//			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_ALWAYS_ON, true);
+//			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_CHARACTER_MODE, false);
+//			store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.QUICK_DIFF_DEFAULT_PROVIDER, "org.eclipse.ui.internal.editors.quickdiff.LastSaveReferenceProvider"); //$NON-NLS-1$
+//		}
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER, true);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION, false);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION_IN_OVERVIEW_RULER, false);
+//		PreferenceConverter.setDefault(store, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_UNKNOWN_INDICATION_COLOR, new RGB(0, 0, 0));
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_USE_CUSTOM_CARETS, false);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_WIDE_CARET, true);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.USE_SATURATED_COLORS_IN_OVERVIEW_RULER, false);
+//
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SELECTION_FOREGROUND_DEFAULT_COLOR, true);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SELECTION_BACKGROUND_DEFAULT_COLOR, true);
+//
+//		store.setDefault(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT, true);
+//
+//		store.setDefault(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT, true);
+//
+//		String mod1Name= Action.findModifierString(SWT.MOD1);	// SWT.COMMAND on MAC; SWT.CONTROL elsewhere
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED, true);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_COLOR_SYSTEM_DEFAULT, true);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER, mod1Name);
+//		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER_MASK, SWT.MOD1);
+//
+//		//HyperlinkDetectorDescriptor[] descriptors= EditorsUI.getHyperlinkDetectorRegistry().getHyperlinkDetectorDescriptors();
+////		for (int i= 0; i < descriptors.length; i++) {
+////			int stateMask= computeStateMask(descriptors[i].getModifierKeys());
+////			if (stateMask == SWT.SHIFT) {
+////				//EditorsPlugin.logErrorMessage("The '" + descriptors[i].getId() + "' hyperlink detector specifies 'Shift' as modifier. This is not allowed and hence replaced with the default modifier."); //$NON-NLS-1$ //$NON-NLS-2$
+////				stateMask= -1;
+////			}
+////			store.setDefault(descriptors[i].getId() + HyperlinkDetectorDescriptor.STATE_MASK_POSTFIX, stateMask);
+////		}
+//
+//		boolean isInstalled = false;
+//		//boolean isInstalled= EditorsUI.getSpellingService().getSpellingEngineDescriptors().length > 0;
+//		//store.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, isInstalled);
+//		//store.setDefault(SpellingService.PREFERENCE_SPELLING_ENGINE, ""); //$NON-NLS-1$
+//
+//		store.setDefault(SHOW_RANGE_INDICATOR, true);
+//		store.setDefault(REVISION_ASK_BEFORE_QUICKDIFF_SWITCH, MessageDialogWithToggle.ALWAYS);
+//
+//		store.setDefault(AbstractTextEditor.PREFERENCE_RULER_CONTRIBUTIONS, ""); //$NON-NLS-1$
+//		store.setDefault(REVISION_RULER_RENDERING_MODE, IRevisionRulerColumnExtension.AGE.name());
+//		store.setDefault(REVISION_RULER_SHOW_AUTHOR, false);
+//		store.setDefault(REVISION_RULER_SHOW_REVISION, false);
+//
+//		store.setDefault(EDITOR_WARN_IF_INPUT_DERIVED, true);
+//		store.setDefault(EDITOR_SMART_HOME_END, true);
+//
+//		store.setDefault(EDITOR_SHOW_WHITESPACE_CHARACTERS, false);
+//		store.setDefault(EDITOR_SHOW_LEADING_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_ENCLOSED_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_TRAILING_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_LEADING_IDEOGRAPHIC_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_ENCLOSED_IDEOGRAPHIC_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_TRAILING_IDEOGRAPHIC_SPACES, true);
+//		store.setDefault(EDITOR_SHOW_LEADING_TABS, true);
+//		store.setDefault(EDITOR_SHOW_ENCLOSED_TABS, true);
+//		store.setDefault(EDITOR_SHOW_TRAILING_TABS, true);
+//		store.setDefault(EDITOR_SHOW_CARRIAGE_RETURN, true);
+//		store.setDefault(EDITOR_SHOW_LINE_FEED, true);
+//		store.setDefault(EDITOR_WHITESPACE_CHARACTER_ALPHA_VALUE, 80);
+//
+//		store.setDefault(EDITOR_TEXT_DRAG_AND_DROP_ENABLED, true);
+//		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
+//		store.setDefault(EDITOR_HOVER_ENRICH_MODE, 0);
+//		store.setDefault(AbstractTextEditor.PREFERENCE_WORD_WRAP_ENABLED, false);
+//
+//		MarkerAnnotationPreferences.initializeDefaultValues(store);
+//
+//		//EditorsPluginPreferenceInitializer.setThemeBasedPreferences(store, false);
+//	}
 
 	/**
 	 * Computes the state mask out of the given modifiers string.

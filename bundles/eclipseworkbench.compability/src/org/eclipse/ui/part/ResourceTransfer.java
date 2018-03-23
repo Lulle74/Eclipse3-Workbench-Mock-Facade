@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 
 /**
  * The <code>ResourceTransfer</code> class is used to transfer an
@@ -171,8 +170,8 @@ public class ResourceTransfer extends ByteArrayTransfer {
 							"+ vncviewer or to run x11vnc without clipboard support " + //$NON-NLS-1$
 							"(use '-noclipboard' and '-nosetclipboard' arguments)."; //$NON-NLS-1$
 				}
-				IDEWorkbenchPlugin.log(message, new IllegalArgumentException(
-						"Maximum limit of resources to transfer is: " + MAX_RESOURCES_TO_TRANSFER)); //$NON-NLS-1$
+//				IDEWorkbenchPlugin.log(message, new IllegalArgumentException(
+//						"Maximum limit of resources to transfer is: " + MAX_RESOURCES_TO_TRANSFER)); //$NON-NLS-1$
 				return null;
 			}
             IResource[] results = new IResource[count];

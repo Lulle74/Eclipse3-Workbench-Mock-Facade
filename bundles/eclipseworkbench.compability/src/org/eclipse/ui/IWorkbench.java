@@ -12,12 +12,10 @@ package org.eclipse.ui;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
-import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IWorkbenchCommandSupport;
@@ -25,14 +23,11 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.contexts.IWorkbenchContextSupport;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.operations.IWorkbenchOperationSupport;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.services.IServiceLocator;
-import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.IViewRegistry;
-import org.eclipse.ui.wizards.IWizardRegistry;
 
 /**
  * A workbench is the root object for the Eclipse Platform user interface.
@@ -492,7 +487,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 *         Guaranteed not to be <code>null</code>.
 	 * @since 3.0
 	 */
-	IWorkbenchActivitySupport getActivitySupport();
+	//IWorkbenchActivitySupport getActivitySupport();
 
 	/**
 	 * Returns an interface to manage commands at the workbench level.
@@ -526,7 +521,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 *         <code>null</code>.
 	 * @since 3.0
 	 */
-	public IThemeManager getThemeManager();
+	//public IThemeManager getThemeManager();
 
 	/**
 	 * Return the intro manager for this workbench.
@@ -535,7 +530,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 *         <code>null</code>.
 	 * @since 3.0
 	 */
-	public IIntroManager getIntroManager();
+	//public IIntroManager getIntroManager();
 
 	/**
 	 * Return the help system for this workbench.
@@ -608,7 +603,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 * @return the new wizard registry
 	 * @since 3.1
 	 */
-	public IWizardRegistry getNewWizardRegistry();
+	//public IWizardRegistry getNewWizardRegistry();
 
 	/**
 	 * Return the import wizard registry.
@@ -616,7 +611,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 * @return the import wizard registry
 	 * @since 3.1
 	 */
-	public IWizardRegistry getImportWizardRegistry();
+	//public IWizardRegistry getImportWizardRegistry();
 
 	/**
 	 * Return the export wizard registry.
@@ -624,7 +619,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 * @return the export wizard registry
 	 * @since 3.1
 	 */
-	public IWizardRegistry getExportWizardRegistry();
+	//public IWizardRegistry getExportWizardRegistry();
 
 	/**
 	 * Save all dirty saveables in the workbench that match the given filter.
@@ -649,9 +644,9 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 *         <code>false</code> if the operation was canceled by the user or
 	 *         an error occurred while saving
 	 */
-	public boolean saveAll(IShellProvider shellProvider,
-			IRunnableContext runnableContext, ISaveableFilter filter,
-			boolean confirm);
+//	public boolean saveAll(IShellProvider shellProvider,
+//			IRunnableContext runnableContext, ISaveableFilter filter,
+//			boolean confirm);
 
 	/**
 	 * Return a shell provider that can be used to get the best parenting

@@ -16,11 +16,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.SubActionBars;
-import org.eclipse.ui.internal.PartSite;
 
 /**
  * A <code>RetargetAction</code> tracks the active part in the workbench.
@@ -110,8 +107,8 @@ public class RetargetAction extends PartEventAction implements
         IWorkbenchPart part = getActivePart();
         if (part != null) {
             IWorkbenchPartSite site = part.getSite();
-            SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
-            bars.removePropertyChangeListener(propertyChangeListener);
+//            SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
+//            bars.removePropertyChangeListener(propertyChangeListener);
         }
     }
 
@@ -142,9 +139,9 @@ public class RetargetAction extends PartEventAction implements
 	public void partActivated(IWorkbenchPart part) {
         super.partActivated(part);
         IWorkbenchPartSite site = part.getSite();
-        SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
-        bars.addPropertyChangeListener(propertyChangeListener);
-        setActionHandler(bars.getGlobalActionHandler(getId()));
+//        SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
+//        bars.addPropertyChangeListener(propertyChangeListener);
+//        setActionHandler(bars.getGlobalActionHandler(getId()));
     }
 
     /**
@@ -175,8 +172,8 @@ public class RetargetAction extends PartEventAction implements
 	public void partDeactivated(IWorkbenchPart part) {
         super.partDeactivated(part);
         IWorkbenchPartSite site = part.getSite();
-        SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
-        bars.removePropertyChangeListener(propertyChangeListener);
+//        SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
+//        bars.removePropertyChangeListener(propertyChangeListener);
 
         IWorkbenchPart activePart = part.getSite().getPage().getActivePart();
         if (activePart != null) {
@@ -199,12 +196,13 @@ public class RetargetAction extends PartEventAction implements
         } else if (event.getProperty().equals(IAction.CHECKED)) {
             Boolean bool = (Boolean) event.getNewValue();
             setChecked(bool.booleanValue());
-        } else if (event.getProperty().equals(SubActionBars.P_ACTION_HANDLERS)) {
-            if (event.getSource() instanceof IActionBars) {
-                IActionBars bars = (IActionBars) event.getSource();
-                setActionHandler(bars.getGlobalActionHandler(getId()));
-            }
-        }
+		}
+//        else if (event.getProperty().equals(SubActionBars.P_ACTION_HANDLERS)) {
+//            if (event.getSource() instanceof IActionBars) {
+//                IActionBars bars = (IActionBars) event.getSource();
+//                setActionHandler(bars.getGlobalActionHandler(getId()));
+//            }
+//        }
     }
 
     /**

@@ -16,9 +16,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.IPageSite;
-import org.eclipse.ui.part.MultiPageEditorSite;
-import org.eclipse.ui.part.PageBookView;
-import org.eclipse.ui.services.IServiceScopes;
 
 /**
  * Query where you are in the workbench hierarchy.

@@ -35,13 +35,11 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.internal.filebuffers.NLSUtility;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -109,7 +107,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension3;
 import org.eclipse.jface.text.source.ISourceViewerExtension4;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerColumn;
 import org.eclipse.jface.text.source.IVerticalRulerExtension;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -117,7 +114,6 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -130,15 +126,6 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSource;
-import org.eclipse.swt.dnd.DragSourceAdapter;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DropTargetAdapter;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -193,10 +180,7 @@ import org.eclipse.ui.Saveable;
 import org.eclipse.ui.SaveablesLifecycleEvent;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
-import org.eclipse.ui.actions.CommandNotMappedException;
-import org.eclipse.ui.actions.ContributedAction;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
-import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.internal.texteditor.EditPosition;
 import org.eclipse.ui.internal.texteditor.FocusedInformationPresenter;
 import org.eclipse.ui.internal.texteditor.TextEditorPlugin;
@@ -207,9 +191,7 @@ import org.eclipse.ui.operations.OperationHistoryActionHandler;
 import org.eclipse.ui.operations.RedoActionHandler;
 import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.texteditor.rulers.IColumnSupport;
-import org.eclipse.ui.texteditor.rulers.IContributedRulerColumn;
 import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
 import org.eclipse.ui.texteditor.rulers.RulerColumnPreferenceAdapter;
 import org.eclipse.ui.texteditor.rulers.RulerColumnRegistry;
@@ -626,8 +608,8 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 						}
 
 						IEditorSite editorSite= getEditorSite();
-						if (editorSite instanceof MultiPageEditorSite)
-							editorSite= ((MultiPageEditorSite)editorSite).getMultiPageEditor().getEditorSite();
+//						if (editorSite instanceof MultiPageEditorSite)
+//							editorSite= ((MultiPageEditorSite)editorSite).getMultiPageEditor().getEditorSite();
 						TextEditorPlugin.getDefault().setLastEditPosition(new EditPosition(input, editorSite.getId(), fLocalLastEditPosition));
 					}
 				}
@@ -1570,179 +1552,179 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 *
 	 * @since 3.3
 	 */
-	protected static class ColumnSupport implements IColumnSupport {
-		private final AbstractTextEditor fEditor;
-		private final RulerColumnRegistry fRegistry;
-		private final List<IContributedRulerColumn> fColumns;
-
-		/**
-		 * Creates a new column support for the given editor. Only the editor itself should normally
-		 * create such an instance.
-		 *
-		 * @param editor the editor
-		 * @param registry the contribution registry to refer to
-		 */
-		public ColumnSupport(AbstractTextEditor editor, RulerColumnRegistry registry) {
-			Assert.isLegal(editor != null);
-			Assert.isLegal(registry != null);
-			fEditor= editor;
-			fRegistry= registry;
-			fColumns= new ArrayList<>();
-		}
-
-		@Override
-		public final void setColumnVisible(RulerColumnDescriptor descriptor, boolean visible) {
-			Assert.isLegal(descriptor != null);
-
-			final CompositeRuler ruler= getRuler();
-			if (ruler == null)
-				return;
-
-			if (!isColumnSupported(descriptor))
-				visible= false;
-
-			if (isColumnVisible(descriptor)) {
-				if (!visible)
-					removeColumn(ruler, descriptor);
-			} else {
-				if (visible)
-					addColumn(ruler, descriptor);
-			}
-		}
-
-		private void addColumn(final CompositeRuler ruler, final RulerColumnDescriptor descriptor) {
-
-			final int idx= computeIndex(ruler, descriptor);
-
-			SafeRunnable runnable= new SafeRunnable() {
-				@Override
-				public void run() throws Exception {
-					IContributedRulerColumn column= descriptor.createColumn(fEditor);
-					fColumns.add(column);
-					initializeColumn(column);
-					ruler.addDecorator(idx, column);
-				}
-			};
-			SafeRunner.run(runnable);
-		}
-
-		/**
-		 * Hook to let subclasses initialize a newly created column.
-		 * <p>
-		 * Subclasses may extend this method.</p>
-		 *
-		 * @param column the created column
-		 */
-		protected void initializeColumn(IContributedRulerColumn column) {
-		}
-
-		private void removeColumn(final CompositeRuler ruler, final RulerColumnDescriptor descriptor) {
-			removeColumn(ruler, getVisibleColumn(ruler, descriptor));
-		}
-
-		private void removeColumn(final CompositeRuler ruler, final IContributedRulerColumn rulerColumn) {
-			if (rulerColumn != null) {
-				SafeRunnable runnable= new SafeRunnable() {
-					@Override
-					public void run() throws Exception {
-						if (ruler != null)
-							ruler.removeDecorator(rulerColumn);
-						rulerColumn.columnRemoved();
-					}
-				};
-				SafeRunner.run(runnable);
-			}
-		}
-
-		/**
-		 * Returns the currently visible column matching <code>id</code>, <code>null</code> if
-		 * none.
-		 *
-		 * @param ruler the composite ruler to scan
-		 * @param descriptor the descriptor of the column of interest
-		 * @return the matching column or <code>null</code>
-		 */
-		private IContributedRulerColumn getVisibleColumn(CompositeRuler ruler, RulerColumnDescriptor descriptor) {
-			for (Iterator<IVerticalRulerColumn> it= ruler.getDecoratorIterator(); it.hasNext();) {
-				IVerticalRulerColumn column= it.next();
-				if (column instanceof IContributedRulerColumn) {
-					IContributedRulerColumn rulerColumn= (IContributedRulerColumn)column;
-					RulerColumnDescriptor rcd= rulerColumn.getDescriptor();
-					if (descriptor.equals(rcd))
-						return rulerColumn;
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * Computes the insertion index for a column contribution into the currently visible columns.
-		 *
-		 * @param ruler the composite ruler into which to insert the column
-		 * @param descriptor the descriptor to compute the index for
-		 * @return the insertion index for a new column
-		 */
-		private int computeIndex(CompositeRuler ruler, RulerColumnDescriptor descriptor) {
-			int index= 0;
-			List<RulerColumnDescriptor> all= fRegistry.getColumnDescriptors();
-			int newPos= all.indexOf(descriptor);
-			for (Iterator<IVerticalRulerColumn> it= ruler.getDecoratorIterator(); it.hasNext();) {
-				IVerticalRulerColumn column= it.next();
-				if (column instanceof IContributedRulerColumn) {
-					RulerColumnDescriptor rcd= ((IContributedRulerColumn)column).getDescriptor();
-					if (rcd != null && all.indexOf(rcd) > newPos)
-						break;
-				} else if ("org.eclipse.jface.text.source.projection.ProjectionRulerColumn".equals(column.getClass().getName())) { //$NON-NLS-1$
-					// projection column is always the rightmost column
-					break;
-				}
-				index++;
-			}
-			return index;
-		}
-
-		@Override
-		public final boolean isColumnVisible(RulerColumnDescriptor descriptor) {
-			Assert.isLegal(descriptor != null);
-			CompositeRuler ruler= getRuler();
-			return ruler != null && getVisibleColumn(ruler, descriptor) != null;
-		}
-
-		@Override
-		public final boolean isColumnSupported(RulerColumnDescriptor descriptor) {
-			Assert.isLegal(descriptor != null);
-			if (getRuler() == null)
-				return false;
-
-			return descriptor.matchesEditor(fEditor);
-		}
-
-		/**
-		 * Returns the editor's vertical ruler, if it is a {@link CompositeRuler}, <code>null</code>
-		 * otherwise.
-		 *
-		 * @return the editor's {@link CompositeRuler} or <code>null</code>
-		 */
-		private CompositeRuler getRuler() {
-			Object ruler= fEditor.getAdapter(IVerticalRulerInfo.class);
-			if (ruler instanceof CompositeRuler)
-				return (CompositeRuler) ruler;
-			return null;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Subclasses may extend this method.</p>
-		 *
-		 */
-		@Override
-		public void dispose() {
-			for (Iterator<IContributedRulerColumn> iter= new ArrayList<>(fColumns).iterator(); iter.hasNext();)
-				removeColumn(getRuler(), iter.next());
-			fColumns.clear();
-		}
-	}
+//	protected static class ColumnSupport implements IColumnSupport {
+//		private final AbstractTextEditor fEditor;
+//		private final RulerColumnRegistry fRegistry;
+//		private final List<IContributedRulerColumn> fColumns;
+//
+//		/**
+//		 * Creates a new column support for the given editor. Only the editor itself should normally
+//		 * create such an instance.
+//		 *
+//		 * @param editor the editor
+//		 * @param registry the contribution registry to refer to
+//		 */
+//		public ColumnSupport(AbstractTextEditor editor, RulerColumnRegistry registry) {
+//			Assert.isLegal(editor != null);
+//			Assert.isLegal(registry != null);
+//			fEditor= editor;
+//			fRegistry= registry;
+//			fColumns= new ArrayList<>();
+//		}
+//
+//		@Override
+//		public final void setColumnVisible(RulerColumnDescriptor descriptor, boolean visible) {
+//			Assert.isLegal(descriptor != null);
+//
+//			final CompositeRuler ruler= getRuler();
+//			if (ruler == null)
+//				return;
+//
+//			if (!isColumnSupported(descriptor))
+//				visible= false;
+//
+//			if (isColumnVisible(descriptor)) {
+//				if (!visible)
+//					removeColumn(ruler, descriptor);
+//			} else {
+//				if (visible)
+//					addColumn(ruler, descriptor);
+//			}
+//		}
+//
+//		private void addColumn(final CompositeRuler ruler, final RulerColumnDescriptor descriptor) {
+//
+//			final int idx= computeIndex(ruler, descriptor);
+//
+//			SafeRunnable runnable= new SafeRunnable() {
+//				@Override
+//				public void run() throws Exception {
+//					IContributedRulerColumn column= descriptor.createColumn(fEditor);
+//					fColumns.add(column);
+//					initializeColumn(column);
+//					ruler.addDecorator(idx, column);
+//				}
+//			};
+//			SafeRunner.run(runnable);
+//		}
+//
+//		/**
+//		 * Hook to let subclasses initialize a newly created column.
+//		 * <p>
+//		 * Subclasses may extend this method.</p>
+//		 *
+//		 * @param column the created column
+//		 */
+//		protected void initializeColumn(IContributedRulerColumn column) {
+//		}
+//
+//		private void removeColumn(final CompositeRuler ruler, final RulerColumnDescriptor descriptor) {
+//			removeColumn(ruler, getVisibleColumn(ruler, descriptor));
+//		}
+//
+//		private void removeColumn(final CompositeRuler ruler, final IContributedRulerColumn rulerColumn) {
+//			if (rulerColumn != null) {
+//				SafeRunnable runnable= new SafeRunnable() {
+//					@Override
+//					public void run() throws Exception {
+//						if (ruler != null)
+//							ruler.removeDecorator(rulerColumn);
+//						rulerColumn.columnRemoved();
+//					}
+//				};
+//				SafeRunner.run(runnable);
+//			}
+//		}
+//
+//		/**
+//		 * Returns the currently visible column matching <code>id</code>, <code>null</code> if
+//		 * none.
+//		 *
+//		 * @param ruler the composite ruler to scan
+//		 * @param descriptor the descriptor of the column of interest
+//		 * @return the matching column or <code>null</code>
+//		 */
+//		private IContributedRulerColumn getVisibleColumn(CompositeRuler ruler, RulerColumnDescriptor descriptor) {
+//			for (Iterator<IVerticalRulerColumn> it= ruler.getDecoratorIterator(); it.hasNext();) {
+//				IVerticalRulerColumn column= it.next();
+//				if (column instanceof IContributedRulerColumn) {
+//					IContributedRulerColumn rulerColumn= (IContributedRulerColumn)column;
+//					RulerColumnDescriptor rcd= rulerColumn.getDescriptor();
+//					if (descriptor.equals(rcd))
+//						return rulerColumn;
+//				}
+//			}
+//			return null;
+//		}
+//
+//		/**
+//		 * Computes the insertion index for a column contribution into the currently visible columns.
+//		 *
+//		 * @param ruler the composite ruler into which to insert the column
+//		 * @param descriptor the descriptor to compute the index for
+//		 * @return the insertion index for a new column
+//		 */
+//		private int computeIndex(CompositeRuler ruler, RulerColumnDescriptor descriptor) {
+//			int index= 0;
+//			List<RulerColumnDescriptor> all= fRegistry.getColumnDescriptors();
+//			int newPos= all.indexOf(descriptor);
+//			for (Iterator<IVerticalRulerColumn> it= ruler.getDecoratorIterator(); it.hasNext();) {
+//				IVerticalRulerColumn column= it.next();
+//				if (column instanceof IContributedRulerColumn) {
+//					RulerColumnDescriptor rcd= ((IContributedRulerColumn)column).getDescriptor();
+//					if (rcd != null && all.indexOf(rcd) > newPos)
+//						break;
+//				} else if ("org.eclipse.jface.text.source.projection.ProjectionRulerColumn".equals(column.getClass().getName())) { //$NON-NLS-1$
+//					// projection column is always the rightmost column
+//					break;
+//				}
+//				index++;
+//			}
+//			return index;
+//		}
+//
+//		@Override
+//		public final boolean isColumnVisible(RulerColumnDescriptor descriptor) {
+//			Assert.isLegal(descriptor != null);
+//			CompositeRuler ruler= getRuler();
+//			return ruler != null && getVisibleColumn(ruler, descriptor) != null;
+//		}
+//
+//		@Override
+//		public final boolean isColumnSupported(RulerColumnDescriptor descriptor) {
+//			Assert.isLegal(descriptor != null);
+//			if (getRuler() == null)
+//				return false;
+//
+//			return descriptor.matchesEditor(fEditor);
+//		}
+//
+//		/**
+//		 * Returns the editor's vertical ruler, if it is a {@link CompositeRuler}, <code>null</code>
+//		 * otherwise.
+//		 *
+//		 * @return the editor's {@link CompositeRuler} or <code>null</code>
+//		 */
+//		private CompositeRuler getRuler() {
+//			Object ruler= fEditor.getAdapter(IVerticalRulerInfo.class);
+//			if (ruler instanceof CompositeRuler)
+//				return (CompositeRuler) ruler;
+//			return null;
+//		}
+//
+//		/**
+//		 * {@inheritDoc}
+//		 * <p>
+//		 * Subclasses may extend this method.</p>
+//		 *
+//		 */
+//		@Override
+//		public void dispose() {
+//			for (Iterator<IContributedRulerColumn> iter= new ArrayList<>(fColumns).iterator(); iter.hasNext();)
+//				removeColumn(getRuler(), iter.next());
+//			fColumns.clear();
+//		}
+//	}
 
 
 
@@ -3264,27 +3246,27 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @param viewer the viewer
 	 * @since 3.0
 	 */
-	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
-			return;
-
-		ITextEditorDropTargetListener listener= getAdapter(ITextEditorDropTargetListener.class);
-
-		if (listener == null) {
-			Object object= Platform.getAdapterManager().loadAdapter(this, "org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
-			if (object instanceof ITextEditorDropTargetListener)
-				listener= (ITextEditorDropTargetListener)object;
-		}
-
-		if (listener != null)
-			dndService.addMergedDropTarget(viewer.getTextWidget(), DND.DROP_MOVE | DND.DROP_COPY, listener.getTransfers(), listener);
-
-		IPreferenceStore store= getPreferenceStore();
-		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
-			installTextDragAndDrop(viewer);
-
-	}
+//	protected void initializeDragAndDrop(ISourceViewer viewer) {
+//		IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
+//		if (dndService == null)
+//			return;
+//
+//		ITextEditorDropTargetListener listener= getAdapter(ITextEditorDropTargetListener.class);
+//
+//		if (listener == null) {
+//			Object object= Platform.getAdapterManager().loadAdapter(this, "org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
+//			if (object instanceof ITextEditorDropTargetListener)
+//				listener= (ITextEditorDropTargetListener)object;
+//		}
+//
+//		if (listener != null)
+//			dndService.addMergedDropTarget(viewer.getTextWidget(), DND.DROP_MOVE | DND.DROP_COPY, listener.getTransfers(), listener);
+//
+//		IPreferenceStore store= getPreferenceStore();
+//		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+//			installTextDragAndDrop(viewer);
+//
+//	}
 
 	/**
 	 * The <code>AbstractTextEditor</code> implementation of this
@@ -3370,7 +3352,7 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 		initializeViewerFont(fSourceViewer);
 		initializeViewerColors(fSourceViewer);
 		initializeFindScopeColor(fSourceViewer);
-		initializeDragAndDrop(fSourceViewer);
+		//initializeDragAndDrop(fSourceViewer);
 
 		StyledText styledText= fSourceViewer.getTextWidget();
 		styledText.addMouseListener(getCursorListener());
@@ -3479,181 +3461,181 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @param viewer the viewer
 	 * @since 3.3
 	 */
-	protected void installTextDragAndDrop(final ISourceViewer viewer) {
-		if (viewer == null || fIsTextDragAndDropInstalled)
-			return;
-
-		final IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
-			return;
-
-		final StyledText st= viewer.getTextWidget();
-
-		// Install drag source
-		final ISelectionProvider selectionProvider= viewer.getSelectionProvider();
-		final DragSource source= new DragSource(st, DND.DROP_COPY | DND.DROP_MOVE);
-		source.setTransfer(new Transfer[] {TextTransfer.getInstance()});
-		source.addDragListener(new DragSourceAdapter() {
-			String fSelectedText;
-			Point fSelection;
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				fTextDragAndDropToken= null;
-				try {
-					fSelection= st.getSelection();
-					event.doit= isLocationSelected(new Point(event.x, event.y));
-
-					ISelection selection= selectionProvider.getSelection();
-					if (selection instanceof ITextSelection)
-						fSelectedText= ((ITextSelection)selection).getText();
-					else // fallback to widget
-						fSelectedText= st.getSelectionText();
-				} catch (IllegalArgumentException ex) {
-					event.doit= false;
-				}
-			}
-
-			private boolean isLocationSelected(Point point) {
-				// FIXME: https://bugs.eclipse.org/bugs/show_bug.cgi?id=260922
-				if (isBlockSelectionModeEnabled())
-					return false;
-
-				int offset= st.getOffsetAtLocation(point);
-				Point p= st.getLocationAtOffset(offset);
-				if (p.x > point.x)
-					offset--;
-				return offset >= fSelection.x && offset < fSelection.y;
-			}
-
-			@Override
-			public void dragSetData(DragSourceEvent event) {
-				event.data= fSelectedText;
-				fTextDragAndDropToken= this; // Can be any non-null object
-			}
-
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				try {
-					if (event.detail == DND.DROP_MOVE && validateEditorInputState()) {
-						Point newSelection= st.getSelection();
-						int length= fSelection.y - fSelection.x;
-						int delta= 0;
-						if (newSelection.x < fSelection.x)
-							delta= length;
-						st.replaceTextRange(fSelection.x + delta, length, ""); //$NON-NLS-1$
-
-						if (fTextDragAndDropToken == null) {
-							// Move in same editor - end compound change
-							IRewriteTarget target= getAdapter(IRewriteTarget.class);
-							if (target != null)
-								target.endCompoundChange();
-						}
-
-					}
-				} finally {
-					fTextDragAndDropToken= null;
-				}
-			}
-		});
-
-		// Install drag target
-		DropTargetListener dropTargetListener= new DropTargetAdapter() {
-
-			private Point fSelection;
-
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-				fTextDragAndDropToken= null;
-				fSelection= st.getSelection();
-				if (event.detail == DND.DROP_DEFAULT) {
-					if ((event.operations & DND.DROP_MOVE) != 0) {
-						event.detail= DND.DROP_MOVE;
-					} else if ((event.operations & DND.DROP_COPY) != 0) {
-						event.detail= DND.DROP_COPY;
-					} else {
-						event.detail= DND.DROP_NONE;
-					}
-				}
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-				if (event.detail == DND.DROP_DEFAULT) {
-					if ((event.operations & DND.DROP_MOVE) != 0) {
-						event.detail= DND.DROP_MOVE;
-					} else if ((event.operations & DND.DROP_COPY) != 0) {
-						event.detail= DND.DROP_COPY;
-					} else {
-						event.detail= DND.DROP_NONE;
-					}
-				}
-			}
-
-			@Override
-			public void dragOver(DropTargetEvent event) {
-				event.feedback |= DND.FEEDBACK_SCROLL;
-			}
-
-			@Override
-			public void drop(DropTargetEvent event) {
-				try {
-					if (fTextDragAndDropToken != null && event.detail == DND.DROP_MOVE) {
-						// Move in same editor
-						int caretOffset= st.getCaretOffset();
-						if (fSelection.x <= caretOffset && caretOffset <= fSelection.y) {
-							event.detail= DND.DROP_NONE;
-							return;
-						}
-
-						// Start compound change
-						IRewriteTarget target= getAdapter(IRewriteTarget.class);
-						if (target != null)
-							target.beginCompoundChange();
-					}
-
-					if (!validateEditorInputState()) {
-						event.detail= DND.DROP_NONE;
-						return;
-					}
-
-					String text= (String)event.data;
-					if (isBlockSelectionModeEnabled()) {
-						// FIXME fix block selection and DND
-//						if (fTextDNDColumnSelection != null && fTextDragAndDropToken != null && event.detail == DND.DROP_MOVE) {
-//							// DND_MOVE within same editor - remove origin before inserting
-//							Rectangle newSelection= st.getColumnSelection();
-//							st.replaceColumnSelection(fTextDNDColumnSelection, ""); //$NON-NLS-1$
-//							st.replaceColumnSelection(newSelection, text);
-//							st.setColumnSelection(newSelection.x, newSelection.y, newSelection.x + fTextDNDColumnSelection.width - fTextDNDColumnSelection.x, newSelection.y + fTextDNDColumnSelection.height - fTextDNDColumnSelection.y);
-//						} else {
-//							Point newSelection= st.getSelection();
-//							st.insert(text);
-//							IDocument document= getDocumentProvider().getDocument(getEditorInput());
-//							int startLine= st.getLineAtOffset(newSelection.x);
-//							int startColumn= newSelection.x - st.getOffsetAtLine(startLine);
-//							int endLine= startLine + document.computeNumberOfLines(text);
-//							int endColumn= startColumn + TextUtilities.indexOf(document.getLegalLineDelimiters(), text, 0)[0];
-//							st.setColumnSelection(startColumn, startLine, endColumn, endLine);
+//	protected void installTextDragAndDrop(final ISourceViewer viewer) {
+//		if (viewer == null || fIsTextDragAndDropInstalled)
+//			return;
+//
+//		final IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
+//		if (dndService == null)
+//			return;
+//
+//		final StyledText st= viewer.getTextWidget();
+//
+//		// Install drag source
+//		final ISelectionProvider selectionProvider= viewer.getSelectionProvider();
+//		final DragSource source= new DragSource(st, DND.DROP_COPY | DND.DROP_MOVE);
+//		source.setTransfer(new Transfer[] {TextTransfer.getInstance()});
+//		source.addDragListener(new DragSourceAdapter() {
+//			String fSelectedText;
+//			Point fSelection;
+//			@Override
+//			public void dragStart(DragSourceEvent event) {
+//				fTextDragAndDropToken= null;
+//				try {
+//					fSelection= st.getSelection();
+//					event.doit= isLocationSelected(new Point(event.x, event.y));
+//
+//					ISelection selection= selectionProvider.getSelection();
+//					if (selection instanceof ITextSelection)
+//						fSelectedText= ((ITextSelection)selection).getText();
+//					else // fallback to widget
+//						fSelectedText= st.getSelectionText();
+//				} catch (IllegalArgumentException ex) {
+//					event.doit= false;
+//				}
+//			}
+//
+//			private boolean isLocationSelected(Point point) {
+//				// FIXME: https://bugs.eclipse.org/bugs/show_bug.cgi?id=260922
+//				if (isBlockSelectionModeEnabled())
+//					return false;
+//
+//				int offset= st.getOffsetAtLocation(point);
+//				Point p= st.getLocationAtOffset(offset);
+//				if (p.x > point.x)
+//					offset--;
+//				return offset >= fSelection.x && offset < fSelection.y;
+//			}
+//
+//			@Override
+//			public void dragSetData(DragSourceEvent event) {
+//				event.data= fSelectedText;
+//				fTextDragAndDropToken= this; // Can be any non-null object
+//			}
+//
+//			@Override
+//			public void dragFinished(DragSourceEvent event) {
+//				try {
+//					if (event.detail == DND.DROP_MOVE && validateEditorInputState()) {
+//						Point newSelection= st.getSelection();
+//						int length= fSelection.y - fSelection.x;
+//						int delta= 0;
+//						if (newSelection.x < fSelection.x)
+//							delta= length;
+//						st.replaceTextRange(fSelection.x + delta, length, ""); //$NON-NLS-1$
+//
+//						if (fTextDragAndDropToken == null) {
+//							// Move in same editor - end compound change
+//							IRewriteTarget target= getAdapter(IRewriteTarget.class);
+//							if (target != null)
+//								target.endCompoundChange();
 //						}
-					} else {
-						Point newSelection= st.getSelection();
-						try {
-							int modelOffset= widgetOffset2ModelOffset(viewer, newSelection.x);
-							viewer.getDocument().replace(modelOffset, 0, text);
-						} catch (BadLocationException e) {
-							return;
-						}
-						st.setSelectionRange(newSelection.x, text.length());
-					}
-				} finally {
-					fTextDragAndDropToken= null;
-				}
-			}
-		};
-		dndService.addMergedDropTarget(st, DND.DROP_MOVE | DND.DROP_COPY, new Transfer[] {TextTransfer.getInstance()}, dropTargetListener);
-
-		fIsTextDragAndDropInstalled= true;
-	}
+//
+//					}
+//				} finally {
+//					fTextDragAndDropToken= null;
+//				}
+//			}
+//		});
+//
+//		// Install drag target
+//		DropTargetListener dropTargetListener= new DropTargetAdapter() {
+//
+//			private Point fSelection;
+//
+//			@Override
+//			public void dragEnter(DropTargetEvent event) {
+//				fTextDragAndDropToken= null;
+//				fSelection= st.getSelection();
+//				if (event.detail == DND.DROP_DEFAULT) {
+//					if ((event.operations & DND.DROP_MOVE) != 0) {
+//						event.detail= DND.DROP_MOVE;
+//					} else if ((event.operations & DND.DROP_COPY) != 0) {
+//						event.detail= DND.DROP_COPY;
+//					} else {
+//						event.detail= DND.DROP_NONE;
+//					}
+//				}
+//			}
+//
+//			@Override
+//			public void dragOperationChanged(DropTargetEvent event) {
+//				if (event.detail == DND.DROP_DEFAULT) {
+//					if ((event.operations & DND.DROP_MOVE) != 0) {
+//						event.detail= DND.DROP_MOVE;
+//					} else if ((event.operations & DND.DROP_COPY) != 0) {
+//						event.detail= DND.DROP_COPY;
+//					} else {
+//						event.detail= DND.DROP_NONE;
+//					}
+//				}
+//			}
+//
+//			@Override
+//			public void dragOver(DropTargetEvent event) {
+//				event.feedback |= DND.FEEDBACK_SCROLL;
+//			}
+//
+//			@Override
+//			public void drop(DropTargetEvent event) {
+//				try {
+//					if (fTextDragAndDropToken != null && event.detail == DND.DROP_MOVE) {
+//						// Move in same editor
+//						int caretOffset= st.getCaretOffset();
+//						if (fSelection.x <= caretOffset && caretOffset <= fSelection.y) {
+//							event.detail= DND.DROP_NONE;
+//							return;
+//						}
+//
+//						// Start compound change
+//						IRewriteTarget target= getAdapter(IRewriteTarget.class);
+//						if (target != null)
+//							target.beginCompoundChange();
+//					}
+//
+//					if (!validateEditorInputState()) {
+//						event.detail= DND.DROP_NONE;
+//						return;
+//					}
+//
+//					String text= (String)event.data;
+//					if (isBlockSelectionModeEnabled()) {
+//						// FIXME fix block selection and DND
+////						if (fTextDNDColumnSelection != null && fTextDragAndDropToken != null && event.detail == DND.DROP_MOVE) {
+////							// DND_MOVE within same editor - remove origin before inserting
+////							Rectangle newSelection= st.getColumnSelection();
+////							st.replaceColumnSelection(fTextDNDColumnSelection, ""); //$NON-NLS-1$
+////							st.replaceColumnSelection(newSelection, text);
+////							st.setColumnSelection(newSelection.x, newSelection.y, newSelection.x + fTextDNDColumnSelection.width - fTextDNDColumnSelection.x, newSelection.y + fTextDNDColumnSelection.height - fTextDNDColumnSelection.y);
+////						} else {
+////							Point newSelection= st.getSelection();
+////							st.insert(text);
+////							IDocument document= getDocumentProvider().getDocument(getEditorInput());
+////							int startLine= st.getLineAtOffset(newSelection.x);
+////							int startColumn= newSelection.x - st.getOffsetAtLine(startLine);
+////							int endLine= startLine + document.computeNumberOfLines(text);
+////							int endColumn= startColumn + TextUtilities.indexOf(document.getLegalLineDelimiters(), text, 0)[0];
+////							st.setColumnSelection(startColumn, startLine, endColumn, endLine);
+////						}
+//					} else {
+//						Point newSelection= st.getSelection();
+//						try {
+//							int modelOffset= widgetOffset2ModelOffset(viewer, newSelection.x);
+//							viewer.getDocument().replace(modelOffset, 0, text);
+//						} catch (BadLocationException e) {
+//							return;
+//						}
+//						st.setSelectionRange(newSelection.x, text.length());
+//					}
+//				} finally {
+//					fTextDragAndDropToken= null;
+//				}
+//			}
+//		};
+//		dndService.addMergedDropTarget(st, DND.DROP_MOVE | DND.DROP_COPY, new Transfer[] {TextTransfer.getInstance()}, dropTargetListener);
+//
+//		fIsTextDragAndDropInstalled= true;
+//	}
 
 	/**
 	 * Uninstalls text drag and drop from the given source viewer.
@@ -3661,25 +3643,25 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @param viewer the viewer
 	 * @since 3.3
 	 */
-	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
-		if (viewer == null || !fIsTextDragAndDropInstalled)
-			return;
-
-		final IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
-			return;
-
-		StyledText st= viewer.getTextWidget();
-		dndService.removeMergedDropTarget(st);
-
-		DragSource dragSource= (DragSource)st.getData(DND.DRAG_SOURCE_KEY);
-		if (dragSource != null) {
-			dragSource.dispose();
-			st.setData(DND.DRAG_SOURCE_KEY, null);
-		}
-
-		fIsTextDragAndDropInstalled= false;
-	}
+//	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
+//		if (viewer == null || !fIsTextDragAndDropInstalled)
+//			return;
+//
+//		final IDragAndDropService dndService= getSite().getService(IDragAndDropService.class);
+//		if (dndService == null)
+//			return;
+//
+//		StyledText st= viewer.getTextWidget();
+//		dndService.removeMergedDropTarget(st);
+//
+//		DragSource dragSource= (DragSource)st.getData(DND.DRAG_SOURCE_KEY);
+//		if (dragSource != null) {
+//			dragSource.dispose();
+//			st.setData(DND.DRAG_SOURCE_KEY, null);
+//		}
+//
+//		fIsTextDragAndDropInstalled= false;
+//	}
 
 	/**
      * Tells whether the editor input should be included when adding object
@@ -4616,10 +4598,12 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 
 		if (PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED.equals(property)) {
 			IPreferenceStore store= getPreferenceStore();
-			if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
-				installTextDragAndDrop(getSourceViewer());
-			else
-				uninstallTextDragAndDrop(getSourceViewer());
+			if ( store != null && store.getBoolean( PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED ) ) {
+				//installTextDragAndDrop(getSourceViewer());
+			}
+			else {
+				//uninstallTextDragAndDrop(getSourceViewer());
+			}
 			return;
 		}
 
@@ -5293,7 +5277,7 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 		IAction action= fActions.get(actionID);
 
 		if (action == null) {
-			action= findContributedAction(actionID);
+			//action= findContributedAction(actionID);
 			if (action != null)
 				setAction(actionID, action);
 		}
@@ -5309,48 +5293,48 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @return the action that has been contributed
 	 * @since 2.0
 	 */
-	private IAction findContributedAction(String actionID) {
-		List<IConfigurationElement> actions= new ArrayList<>();
-		IConfigurationElement[] elements= Platform.getExtensionRegistry().getConfigurationElementsFor(PlatformUI.PLUGIN_ID, "editorActions"); //$NON-NLS-1$
-		for (int i= 0; i < elements.length; i++) {
-			IConfigurationElement element= elements[i];
-			if (TAG_CONTRIBUTION_TYPE.equals(element.getName())) {
-				if (!getSite().getId().equals(element.getAttribute("targetID"))) //$NON-NLS-1$
-					continue;
-
-				IConfigurationElement[] children= element.getChildren("action"); //$NON-NLS-1$
-				for (int j= 0; j < children.length; j++) {
-					IConfigurationElement child= children[j];
-					if (actionID.equals(child.getAttribute("actionID"))) //$NON-NLS-1$
-						actions.add(child);
-				}
-			}
-		}
-		int actionSize= actions.size();
-		if (actionSize > 0) {
-			IConfigurationElement element;
-			if (actionSize > 1) {
-				IConfigurationElement[] actionArray= actions.toArray(new IConfigurationElement[actionSize]);
-				ConfigurationElementSorter sorter= new ConfigurationElementSorter() {
-					@Override
-					public IConfigurationElement getConfigurationElement(Object object) {
-						return (IConfigurationElement)object;
-					}
-				};
-				sorter.sort(actionArray);
-				element= actionArray[0];
-			} else
-				element= actions.get(0);
-
-			try {
-				return new ContributedAction(getSite(), element);
-			} catch (CommandNotMappedException e) {
-				// out of luck, no command action mapping
-			}
-		}
-
-		return null;
-	}
+//	private IAction findContributedAction(String actionID) {
+//		List<IConfigurationElement> actions= new ArrayList<>();
+//		IConfigurationElement[] elements= Platform.getExtensionRegistry().getConfigurationElementsFor(PlatformUI.PLUGIN_ID, "editorActions"); //$NON-NLS-1$
+//		for (int i= 0; i < elements.length; i++) {
+//			IConfigurationElement element= elements[i];
+//			if (TAG_CONTRIBUTION_TYPE.equals(element.getName())) {
+//				if (!getSite().getId().equals(element.getAttribute("targetID"))) //$NON-NLS-1$
+//					continue;
+//
+//				IConfigurationElement[] children= element.getChildren("action"); //$NON-NLS-1$
+//				for (int j= 0; j < children.length; j++) {
+//					IConfigurationElement child= children[j];
+//					if (actionID.equals(child.getAttribute("actionID"))) //$NON-NLS-1$
+//						actions.add(child);
+//				}
+//			}
+//		}
+//		int actionSize= actions.size();
+//		if (actionSize > 0) {
+//			IConfigurationElement element;
+//			if (actionSize > 1) {
+//				IConfigurationElement[] actionArray= actions.toArray(new IConfigurationElement[actionSize]);
+//				ConfigurationElementSorter sorter= new ConfigurationElementSorter() {
+//					@Override
+//					public IConfigurationElement getConfigurationElement(Object object) {
+//						return (IConfigurationElement)object;
+//					}
+//				};
+//				sorter.sort(actionArray);
+//				element= actionArray[0];
+//			} else
+//				element= actions.get(0);
+//
+//			try {
+//				return new ContributedAction(getSite(), element);
+//			} catch (CommandNotMappedException e) {
+//				// out of luck, no command action mapping
+//			}
+//		}
+//
+//		return null;
+//	}
 
 	/**
 	 * Updates the specified action by calling <code>IUpdate.update</code>

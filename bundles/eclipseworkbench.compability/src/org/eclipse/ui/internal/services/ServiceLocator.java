@@ -20,11 +20,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.misc.StatusUtil;
 import org.eclipse.ui.services.AbstractServiceFactory;
 import org.eclipse.ui.services.IDisposable;
 import org.eclipse.ui.services.IServiceLocator;
@@ -121,7 +118,7 @@ public final class ServiceLocator implements IDisposable, INestable,
 
 				@Override
 				public void handleException(Throwable ex) {
-					WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.ERROR, "Error while activating: " + service, ex)); //$NON-NLS-1$
+					//WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.ERROR, "Error while activating: " + service, ex)); //$NON-NLS-1$
 				}
 			});
 		}
@@ -143,8 +140,8 @@ public final class ServiceLocator implements IDisposable, INestable,
 
 				@Override
 				public void handleException(Throwable ex) {
-					WorkbenchPlugin
-							.log(StatusUtil.newStatus(IStatus.ERROR, "Error while deactivating: " + service, ex)); //$NON-NLS-1$
+					//WorkbenchPlugin
+					//		.log(StatusUtil.newStatus(IStatus.ERROR, "Error while deactivating: " + service, ex)); //$NON-NLS-1$
 				}
 			});
 		}
@@ -161,11 +158,11 @@ public final class ServiceLocator implements IDisposable, INestable,
 		}
 		// Check if there was some other leftover and warn about it.
 		if (services.size() > 0) {
-			WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.WARNING,
-					String.format(
-							"Services: %s register themselves while disposing (skipping dispose of such services).", //$NON-NLS-1$
-							services),
-					null));
+			//WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.WARNING,
+			//		String.format(
+			//				"Services: %s register themselves while disposing (skipping dispose of such services).", //$NON-NLS-1$
+			//				services),
+			//		null));
 		}
 		services.clear();
 		disposed = true;
@@ -187,9 +184,9 @@ public final class ServiceLocator implements IDisposable, INestable,
 
 					@Override
 					public void handleException(Throwable ex) {
-						WorkbenchPlugin
-								.log(StatusUtil.newStatus(IStatus.ERROR,
-										"Error while disposing: " + iDisposable.getClass().getName(), ex)); //$NON-NLS-1$
+						//WorkbenchPlugin
+						//		.log(StatusUtil.newStatus(IStatus.ERROR,
+						//				"Error while disposing: " + iDisposable.getClass().getName(), ex)); //$NON-NLS-1$
 					}
 				});
 			}
@@ -281,7 +278,7 @@ public final class ServiceLocator implements IDisposable, INestable,
 		if (isDisposed()) {
 			IllegalStateException ex = new IllegalStateException("An attempt was made to register service " + service //$NON-NLS-1$
 					+ " with implementation class " + api + " on a disposed service locator"); //$NON-NLS-1$//$NON-NLS-2$
-			WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.ERROR, ex.getMessage(), ex));
+			//WorkbenchPlugin.log(StatusUtil.newStatus(IStatus.ERROR, ex.getMessage(), ex));
 			return;
 		}
 

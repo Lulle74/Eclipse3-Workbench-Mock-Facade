@@ -188,12 +188,12 @@ public class CommandAction extends Action {
 			parameterizedCommand.getCommand().setEnabled(
 					handlerService.getCurrentState());
 			setEnabled(parameterizedCommand.getCommand().isEnabled());
-			setImageDescriptor(commandImageService.getImageDescriptor(
-					commandIdIn, ICommandImageService.TYPE_DEFAULT));
-			setDisabledImageDescriptor(commandImageService.getImageDescriptor(
-					commandIdIn, ICommandImageService.TYPE_DISABLED));
-			setHoverImageDescriptor(commandImageService.getImageDescriptor(
-					commandIdIn, ICommandImageService.TYPE_HOVER));
+//			setImageDescriptor(commandImageService.getImageDescriptor(
+//					commandIdIn, ICommandImageService.TYPE_DEFAULT));
+//			setDisabledImageDescriptor(commandImageService.getImageDescriptor(
+//					commandIdIn, ICommandImageService.TYPE_DISABLED));
+//			setHoverImageDescriptor(commandImageService.getImageDescriptor(
+//					commandIdIn, ICommandImageService.TYPE_HOVER));
 		}
 	}
 

@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.internal.texteditor.quickdiff.QuickDiffExtensionsRegistry;
-import org.eclipse.ui.internal.texteditor.spelling.SpellingEngineRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -51,13 +49,13 @@ public final class TextEditorPlugin extends AbstractUIPlugin implements IRegistr
 	 * The quick diff extension registry.
 	 * @since 3.0
 	 */
-	private QuickDiffExtensionsRegistry fQuickDiffExtensionRegistry;
+	//private QuickDiffExtensionsRegistry fQuickDiffExtensionRegistry;
 
 	/**
 	 * The spelling engine registry
 	 * @since 3.1
 	 */
-	private SpellingEngineRegistry fSpellingEngineRegistry;
+	//private SpellingEngineRegistry fSpellingEngineRegistry;
 
 	/**
 	 * Creates a plug-in instance.
@@ -145,25 +143,25 @@ public final class TextEditorPlugin extends AbstractUIPlugin implements IRegistr
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		fQuickDiffExtensionRegistry= new QuickDiffExtensionsRegistry();
-		fSpellingEngineRegistry= new SpellingEngineRegistry();
+		//fQuickDiffExtensionRegistry= new QuickDiffExtensionsRegistry();
+		//fSpellingEngineRegistry= new SpellingEngineRegistry();
 		Platform.getExtensionRegistry().addRegistryChangeListener(this, PLUGIN_ID);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		Platform.getExtensionRegistry().removeRegistryChangeListener(this);
-		fQuickDiffExtensionRegistry= null;
-		fSpellingEngineRegistry= null;
+		//fQuickDiffExtensionRegistry= null;
+		//fSpellingEngineRegistry= null;
 		super.stop(context);
 	}
 
 	@Override
 	public void registryChanged(IRegistryChangeEvent event) {
-		if (fQuickDiffExtensionRegistry != null && event.getExtensionDeltas(PLUGIN_ID, REFERENCE_PROVIDER_EXTENSION_POINT).length > 0)
-			fQuickDiffExtensionRegistry.reloadExtensions();
-		if (fSpellingEngineRegistry != null && event.getExtensionDeltas(PLUGIN_ID, SpellingEngineRegistry.SPELLING_ENGINE_EXTENSION_POINT).length > 0)
-			fSpellingEngineRegistry.reloadExtensions();
+//		if (fQuickDiffExtensionRegistry != null && event.getExtensionDeltas(PLUGIN_ID, REFERENCE_PROVIDER_EXTENSION_POINT).length > 0)
+//			fQuickDiffExtensionRegistry.reloadExtensions();
+//		if (fSpellingEngineRegistry != null && event.getExtensionDeltas(PLUGIN_ID, SpellingEngineRegistry.SPELLING_ENGINE_EXTENSION_POINT).length > 0)
+//			fSpellingEngineRegistry.reloadExtensions();
 	}
 
 	/**
@@ -172,9 +170,9 @@ public final class TextEditorPlugin extends AbstractUIPlugin implements IRegistr
 	 * @return the quick diff extension registry or <code>null</code> if this plug-in has been shutdown
 	 * @since 3.0
 	 */
-	public QuickDiffExtensionsRegistry getQuickDiffExtensionRegistry() {
-		return fQuickDiffExtensionRegistry;
-	}
+//	public QuickDiffExtensionsRegistry getQuickDiffExtensionRegistry() {
+//		return fQuickDiffExtensionRegistry;
+//	}
 
 	/**
 	 * Returns this plug-ins spelling engine registry.
@@ -182,7 +180,7 @@ public final class TextEditorPlugin extends AbstractUIPlugin implements IRegistr
 	 * @return the spelling engine registry or <code>null</code> if this plug-in has been shutdown
 	 * @since 3.1
 	 */
-	public SpellingEngineRegistry getSpellingEngineRegistry() {
-		return fSpellingEngineRegistry;
-	}
+//	public SpellingEngineRegistry getSpellingEngineRegistry() {
+//		return fSpellingEngineRegistry;
+//	}
 }

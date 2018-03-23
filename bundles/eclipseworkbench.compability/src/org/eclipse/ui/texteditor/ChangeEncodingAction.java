@@ -19,7 +19,6 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,9 +27,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.IEncodingSupport;
-import org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor;
-import org.eclipse.ui.ide.dialogs.EncodingFieldEditor;
-import org.eclipse.ui.ide.dialogs.ResourceEncodingFieldEditor;
 
 /**
  * Action for changing the encoding of the editor's
@@ -96,7 +92,7 @@ public class ChangeEncodingAction extends TextEditorAction {
 		}
 
 		Dialog dialog= new Dialog(parentShell) {
-			private AbstractEncodingFieldEditor fEncodingEditor;
+			//private AbstractEncodingFieldEditor fEncodingEditor;
 			private IPreferenceStore store= null;
 
 			@Override
@@ -136,26 +132,26 @@ public class ChangeEncodingAction extends TextEditorAction {
 					}
 				};
 
-				if (resource != null) {
-					fEncodingEditor= new ResourceEncodingFieldEditor("", composite, resource, null); //$NON-NLS-1$
-					fEncodingEditor.setPage(page);
-					fEncodingEditor.load();
-				} else {
-					fEncodingEditor= new EncodingFieldEditor(ENCODING_PREF_KEY, "", null, composite); //$NON-NLS-1$
-					store= new PreferenceStore();
-					String defaultEncoding= encodingSupport.getDefaultEncoding();
-					store.setDefault(ENCODING_PREF_KEY, defaultEncoding);
-					String encoding= encodingSupport.getEncoding();
-					if (encoding != null)
-						store.setValue(ENCODING_PREF_KEY, encoding);
-					fEncodingEditor.setPreferenceStore(store);
-
-					fEncodingEditor.setPage(page);
-					fEncodingEditor.load();
-
-					if (encoding == null || encoding.equals(defaultEncoding) || encoding.length() == 0)
-						fEncodingEditor.loadDefault();
-				}
+//				if (resource != null) {
+//					fEncodingEditor= new ResourceEncodingFieldEditor("", composite, resource, null); //$NON-NLS-1$
+//					fEncodingEditor.setPage(page);
+//					fEncodingEditor.load();
+//				} else {
+//					fEncodingEditor= new EncodingFieldEditor(ENCODING_PREF_KEY, "", null, composite); //$NON-NLS-1$
+//					store= new PreferenceStore();
+//					String defaultEncoding= encodingSupport.getDefaultEncoding();
+//					store.setDefault(ENCODING_PREF_KEY, defaultEncoding);
+//					String encoding= encodingSupport.getEncoding();
+//					if (encoding != null)
+//						store.setValue(ENCODING_PREF_KEY, encoding);
+//					fEncodingEditor.setPreferenceStore(store);
+//
+//					fEncodingEditor.setPage(page);
+//					fEncodingEditor.load();
+//
+//					if (encoding == null || encoding.equals(defaultEncoding) || encoding.length() == 0)
+//						fEncodingEditor.loadDefault();
+//				}
 
 				return composite;
 			}
@@ -181,12 +177,12 @@ public class ChangeEncodingAction extends TextEditorAction {
 			}
 
 			private void apply() {
-				fEncodingEditor.store();
-
-				if (resource == null) {
-					String encoding= fEncodingEditor.getPreferenceStore().getString(fEncodingEditor.getPreferenceName());
-					encodingSupport.setEncoding(encoding);
-				}
+//				fEncodingEditor.store();
+//
+//				if (resource == null) {
+//					String encoding= fEncodingEditor.getPreferenceStore().getString(fEncodingEditor.getPreferenceName());
+//					encodingSupport.setEncoding(encoding);
+//				}
 			}
 		};
 		dialog.open();

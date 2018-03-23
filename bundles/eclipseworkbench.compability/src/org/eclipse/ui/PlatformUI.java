@@ -10,14 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.application.WorkbenchAdvisor;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.ui.testing.TestableObject;
 
 /**
  * The central class for access to the Eclipse Platform User Interface.
@@ -88,11 +81,12 @@ public final class PlatformUI {
      * @return the workbench
      */
     public static IWorkbench getWorkbench() {
-        if (Workbench.getInstance() == null) {
+		//if (Workbench.getInstance() == null) {
             // app forgot to call createAndRunWorkbench beforehand
             throw new IllegalStateException(WorkbenchMessages.PlatformUI_NoWorkbench);
-        }
-        return Workbench.getInstance();
+		//}
+
+	//return Workbench.getInstance();
     }
 
     /**
@@ -111,7 +105,8 @@ public final class PlatformUI {
 	 * @since 3.0
 	 */
     public static boolean isWorkbenchRunning() {
-		return Workbench.getInstance() != null && Workbench.getInstance().isRunning();
+		return false;
+		//return Workbench.getInstance() != null && Workbench.getInstance().isRunning();
     }
 
     /**
@@ -144,9 +139,9 @@ public final class PlatformUI {
      * because of an emergency; other values reserved for future use
      * @since 3.0
      */
-	public static int createAndRunWorkbench(Display display, WorkbenchAdvisor advisor) {
-        return Workbench.createAndRunWorkbench(display, advisor);
-    }
+//	public static int createAndRunWorkbench(Display display, WorkbenchAdvisor advisor) {
+//        return Workbench.createAndRunWorkbench(display, advisor);
+//    }
 
     /**
      * Creates the <code>Display</code> to be used by the workbench.
@@ -156,9 +151,9 @@ public final class PlatformUI {
      * @return the display
      * @since 3.0
      */
-    public static Display createDisplay() {
-        return Workbench.createDisplay();
-    }
+//    public static Display createDisplay() {
+//        return Workbench.createDisplay();
+//    }
 
     /**
      * Returns the testable object facade, for use by the test harness.
@@ -173,14 +168,14 @@ public final class PlatformUI {
      * @return the testable object facade
      * @since 3.0
      */
-    public static TestableObject getTestableObject() {
-		// Try finding a pre-registered TO in the OSGi service registry
-		TestableObject testableObject = WorkbenchPlugin.getDefault().getTestableObject();
-		if (testableObject == null) {
-			return Workbench.getWorkbenchTestable();
-		}
-		return testableObject;
-    }
+//    public static TestableObject getTestableObject() {
+//		// Try finding a pre-registered TO in the OSGi service registry
+//		TestableObject testableObject = WorkbenchPlugin.getDefault().getTestableObject();
+//		if (testableObject == null) {
+//			//return Workbench.getWorkbenchTestable();
+//		}
+//		return testableObject;
+//    }
 
     /**
      * Returns the preference store used for publicly settable workbench preferences.
@@ -190,7 +185,7 @@ public final class PlatformUI {
      * @return the workbench public preference store
      * @since 3.0
      */
-    public static IPreferenceStore getPreferenceStore() {
-        return PrefUtil.getAPIPreferenceStore();
-    }
+//    public static IPreferenceStore getPreferenceStore() {
+//        return PrefUtil.getAPIPreferenceStore();
+//    }
 }

@@ -22,8 +22,6 @@ import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuListener2;
@@ -35,7 +33,6 @@ import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -57,14 +54,9 @@ import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.handlers.HandlerProxy;
-import org.eclipse.ui.internal.menus.CommandMessages;
-import org.eclipse.ui.internal.misc.StatusUtil;
 import org.eclipse.ui.internal.services.IWorkbenchLocationService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.services.IServiceLocator;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * A contribution item which delegates to a command. It can be used in {@link
@@ -289,12 +281,12 @@ public class CommandContributionItem extends ContributionItem {
 		if (icon == null) {
 			ICommandImageService service = locator
 					.getService(ICommandImageService.class);
-			icon = service.getImageDescriptor(command.getId(),
-					ICommandImageService.TYPE_DEFAULT, iconStyle);
-			disabledIcon = service.getImageDescriptor(command.getId(),
-					ICommandImageService.TYPE_DISABLED, iconStyle);
-			hoverIcon = service.getImageDescriptor(command.getId(),
-					ICommandImageService.TYPE_HOVER, iconStyle);
+//			icon = service.getImageDescriptor(command.getId(),
+//					ICommandImageService.TYPE_DEFAULT, iconStyle);
+//			disabledIcon = service.getImageDescriptor(command.getId(),
+//					ICommandImageService.TYPE_DISABLED, iconStyle);
+//			hoverIcon = service.getImageDescriptor(command.getId(),
+//					ICommandImageService.TYPE_HOVER, iconStyle);
 
 			if (contributedIcon == null)
 				contributedIcon = icon;
@@ -362,11 +354,11 @@ public class CommandContributionItem extends ContributionItem {
 			return true;
 
 		// special case, if its HandlerProxy, then check the actual handler
-		if (handler instanceof HandlerProxy) {
-			HandlerProxy handlerProxy = (HandlerProxy) handler;
-			IHandler actualHandler = handlerProxy.getHandler();
-			return shouldRestoreAppearance(actualHandler);
-		}
+//		if (handler instanceof HandlerProxy) {
+//			HandlerProxy handlerProxy = (HandlerProxy) handler;
+//			IHandler actualHandler = handlerProxy.getHandler();
+//			return shouldRestoreAppearance(actualHandler);
+//		}
 		return false;
 	}
 
@@ -388,22 +380,22 @@ public class CommandContributionItem extends ContributionItem {
 
 	void createCommand(String commandId, Map parameters) {
 		if (commandId == null) {
-			StatusManager.getManager().handle(
-					StatusUtil.newStatus(IStatus.ERROR,
-							"Unable to create menu item \"" + getId() //$NON-NLS-1$
-									+ "\", no command id", null)); //$NON-NLS-1$
+//			StatusManager.getManager().handle(
+//					StatusUtil.newStatus(IStatus.ERROR,
+//							"Unable to create menu item \"" + getId() //$NON-NLS-1$
+//									+ "\", no command id", null)); //$NON-NLS-1$
 			return;
 		}
 		Command cmd = commandService.getCommand(commandId);
 		if (!cmd.isDefined()) {
-			StatusManager
-					.getManager()
-					.handle(
-							StatusUtil
-									.newStatus(
-											IStatus.ERROR,
-											"Unable to create menu item \"" + getId() //$NON-NLS-1$
-													+ "\", command \"" + commandId + "\" not defined", null)); //$NON-NLS-1$ //$NON-NLS-2$
+//			StatusManager
+//					.getManager()
+//					.handle(
+//							StatusUtil
+//									.newStatus(
+//											IStatus.ERROR,
+//											"Unable to create menu item \"" + getId() //$NON-NLS-1$
+//													+ "\", command \"" + commandId + "\" not defined", null)); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		command = ParameterizedCommand.generateCommand(cmd, parameters);
@@ -527,10 +519,10 @@ public class CommandContributionItem extends ContributionItem {
 				try {
 					text = command.getCommand().getName();
 				} catch (NotDefinedException e) {
-					StatusManager.getManager().handle(
-							StatusUtil.newStatus(IStatus.ERROR,
-									"Update item failed " //$NON-NLS-1$
-											+ getId(), e));
+//					StatusManager.getManager().handle(
+//							StatusUtil.newStatus(IStatus.ERROR,
+//									"Update item failed " //$NON-NLS-1$
+//											+ getId(), e));
 				}
 			}
 		}
@@ -579,10 +571,10 @@ public class CommandContributionItem extends ContributionItem {
 						tooltip = text;
 					}
 				} catch (NotDefinedException e) {
-					StatusManager.getManager().handle(
-							StatusUtil.newStatus(IStatus.ERROR,
-									"Update item failed " //$NON-NLS-1$
-											+ getId(), e));
+//					StatusManager.getManager().handle(
+//							StatusUtil.newStatus(IStatus.ERROR,
+//									"Update item failed " //$NON-NLS-1$
+//											+ getId(), e));
 				}
 			}
 		}
@@ -616,10 +608,10 @@ public class CommandContributionItem extends ContributionItem {
 				try {
 					text = command.getCommand().getName();
 				} catch (NotDefinedException e) {
-					StatusManager.getManager().handle(
-							StatusUtil.newStatus(IStatus.ERROR,
-									"Update item failed " //$NON-NLS-1$
-											+ getId(), e));
+//					StatusManager.getManager().handle(
+//							StatusUtil.newStatus(IStatus.ERROR,
+//									"Update item failed " //$NON-NLS-1$
+//											+ getId(), e));
 				}
 			}
 		}
@@ -657,8 +649,8 @@ public class CommandContributionItem extends ContributionItem {
 			String acceleratorText = activeBinding.format();
 			if (acceleratorText != null
 					&& acceleratorText.length() != 0) {
-				tooltipText = NLS.bind(CommandMessages.Tooltip_Accelerator,
-						tooltipText, acceleratorText);
+//				tooltipText = NLS.bind(CommandMessages.Tooltip_Accelerator,
+//						tooltipText, acceleratorText);
 			}
 		}
 
@@ -736,10 +728,10 @@ public class CommandContributionItem extends ContributionItem {
 			try {
 				elementRef = commandService.registerElementForCommand(command, callback);
 			} catch (NotDefinedException e) {
-				StatusManager.getManager().handle(
-						StatusUtil.newStatus(IStatus.ERROR, "Unable to register menu item \"" + getId() //$NON-NLS-1$
-								+ "\", command \"" + command.getId() + "\" not defined", //$NON-NLS-1$ //$NON-NLS-2$
-								null));
+//				StatusManager.getManager().handle(
+//						StatusUtil.newStatus(IStatus.ERROR, "Unable to register menu item \"" + getId() //$NON-NLS-1$
+//								+ "\", command \"" + command.getId() + "\" not defined", //$NON-NLS-1$ //$NON-NLS-2$
+//								null));
 			}
 			command.getCommand().addCommandListener(getCommandListener());
 		}
@@ -820,25 +812,25 @@ public class CommandContributionItem extends ContributionItem {
 		try {
 			handlerService.executeCommand(command, event);
 		} catch (ExecutionException e) {
-			StatusManager.getManager().handle(
-					StatusUtil.newStatus(IStatus.ERROR,
-							"Failed to execute item " //$NON-NLS-1$
-									+ getId(), e));
+//			StatusManager.getManager().handle(
+//					StatusUtil.newStatus(IStatus.ERROR,
+//							"Failed to execute item " //$NON-NLS-1$
+//									+ getId(), e));
 		} catch (NotDefinedException e) {
-			StatusManager.getManager().handle(
-					StatusUtil.newStatus(IStatus.ERROR,
-							"Failed to execute item " //$NON-NLS-1$
-									+ getId(), e));
+//			StatusManager.getManager().handle(
+//					StatusUtil.newStatus(IStatus.ERROR,
+//							"Failed to execute item " //$NON-NLS-1$
+//									+ getId(), e));
 		} catch (NotEnabledException e) {
-			StatusManager.getManager().handle(
-					StatusUtil.newStatus(IStatus.ERROR,
-							"Failed to execute item " //$NON-NLS-1$
-									+ getId(), e));
+//			StatusManager.getManager().handle(
+//					StatusUtil.newStatus(IStatus.ERROR,
+//							"Failed to execute item " //$NON-NLS-1$
+//									+ getId(), e));
 		} catch (NotHandledException e) {
-			StatusManager.getManager().handle(
-					StatusUtil.newStatus(IStatus.ERROR,
-							"Failed to execute item " //$NON-NLS-1$
-									+ getId(), e));
+//			StatusManager.getManager().handle(
+//					StatusUtil.newStatus(IStatus.ERROR,
+//							"Failed to execute item " //$NON-NLS-1$
+//									+ getId(), e));
 		}
 	}
 
@@ -913,9 +905,9 @@ public class CommandContributionItem extends ContributionItem {
 				icon = ImageDescriptor.getMissingImageDescriptor();
 				item.setImage(m.createImage(icon));
 				// as we replaced the failed icon, log the message once.
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, WorkbenchPlugin.PI_WORKBENCH,
-								"Failed to load image", e)); //$NON-NLS-1$
+//				StatusManager.getManager().handle(
+//						new Status(IStatus.ERROR, WorkbenchPlugin.PI_WORKBENCH,
+//								"Failed to load image", e)); //$NON-NLS-1$
 			}
 			disposeOldImages();
 			localResourceManager = m;
