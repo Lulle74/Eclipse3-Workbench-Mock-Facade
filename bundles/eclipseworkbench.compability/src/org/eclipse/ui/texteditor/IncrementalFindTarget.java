@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.keys.IBindingService;
 
 /**
  * An incremental find target. Replace is always disabled.
@@ -631,17 +630,17 @@ class IncrementalFindTarget implements IFindReplaceTarget, IFindReplaceTargetExt
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		IBindingService bindingService= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-		if (bindingService != null && !bindingService.isKeyFilterEnabled()) {
-			/*
-			 * Workaround for bug 492587: Autosave breaks Incremental Find:
-			 * We don't want to leave when the Workbench Window temporarily disables controls to
-			 * run an IRunnableWithProgress. There's no direct API to know that this happens, but
-			 * we can rely on the implementation detail that WorkbenchWindow#run(..) disables the
-			 * key filter (and is the only one who does this, except for the Keys preference page).
-			 */
-			return;
-		}
+//		IBindingService bindingService= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+//		if (bindingService != null && !bindingService.isKeyFilterEnabled()) {
+//			/*
+//			 * Workaround for bug 492587: Autosave breaks Incremental Find:
+//			 * We don't want to leave when the Workbench Window temporarily disables controls to
+//			 * run an IRunnableWithProgress. There's no direct API to know that this happens, but
+//			 * we can rely on the implementation detail that WorkbenchWindow#run(..) disables the
+//			 * key filter (and is the only one who does this, except for the Keys preference page).
+//			 */
+//			return;
+//		}
 		leave();
 	}
 

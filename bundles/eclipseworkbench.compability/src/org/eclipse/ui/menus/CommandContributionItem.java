@@ -54,8 +54,6 @@ import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.internal.services.IWorkbenchLocationService;
-import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
@@ -114,7 +112,7 @@ public class CommandContributionItem extends ContributionItem {
 
 	private IHandlerService handlerService;
 
-	private IBindingService bindingService;
+	//private IBindingService bindingService;
 
 	private ParameterizedCommand command;
 
@@ -203,10 +201,10 @@ public class CommandContributionItem extends ContributionItem {
 				.getService(ICommandService.class);
 		handlerService = contributionParameters.serviceLocator
 				.getService(IHandlerService.class);
-		bindingService = contributionParameters.serviceLocator
-				.getService(IBindingService.class);
-		IWorkbenchLocationService workbenchLocationService = contributionParameters.serviceLocator.getService(IWorkbenchLocationService.class);
-		display = workbenchLocationService.getWorkbench().getDisplay();
+//		bindingService = contributionParameters.serviceLocator
+//				.getService(IBindingService.class);
+		//IWorkbenchLocationService workbenchLocationService = contributionParameters.serviceLocator.getService(IWorkbenchLocationService.class);
+		//display = workbenchLocationService.getWorkbench().getDisplay();
 
 		createCommand(contributionParameters.commandId,
 				contributionParameters.parameters);
@@ -223,9 +221,10 @@ public class CommandContributionItem extends ContributionItem {
 						// it's OK to not have a helpContextId
 					}
 				}
-				IWorkbenchLocationService wls = contributionParameters.serviceLocator
-						.getService(IWorkbenchLocationService.class);
-				final IWorkbench workbench = wls.getWorkbench();
+			final IWorkbench workbench = null;
+			//IWorkbenchLocationService wls = contributionParameters.serviceLocator
+			//		.getService(IWorkbenchLocationService.class);
+			//final IWorkbench workbench = wls.getWorkbench();
 				if (workbench != null && helpContextId != null) {
 					this.workbenchHelpSystem = workbench.getHelpSystem();
 				}
@@ -530,8 +529,9 @@ public class CommandContributionItem extends ContributionItem {
 
 		String keyBindingText = null;
 		if (command != null) {
-			TriggerSequence binding = bindingService
-					.getBestActiveBindingFor(command);
+			TriggerSequence binding = null;
+//			TriggerSequence binding = bindingService
+//					.getBestActiveBindingFor(command);
 			if (binding != null) {
 				keyBindingText = binding.format();
 			}
@@ -643,8 +643,9 @@ public class CommandContributionItem extends ContributionItem {
 			else
 				tooltipText = ""; //$NON-NLS-1$
 
-		TriggerSequence activeBinding = bindingService
-				.getBestActiveBindingFor(command);
+		TriggerSequence activeBinding = null;
+//		TriggerSequence activeBinding = bindingService
+//				.getBestActiveBindingFor(command);
 		if (activeBinding != null && !activeBinding.isEmpty()) {
 			String acceleratorText = activeBinding.format();
 			if (acceleratorText != null
@@ -735,7 +736,7 @@ public class CommandContributionItem extends ContributionItem {
 			}
 			command.getCommand().addCommandListener(getCommandListener());
 		}
-		bindingService.addBindingManagerListener(bindingManagerListener);
+		//bindingService.addBindingManagerListener(bindingManagerListener);
 	}
 
 	private void disconnectReferences() {
@@ -748,9 +749,9 @@ public class CommandContributionItem extends ContributionItem {
 			commandListener = null;
 		}
 
-		if (bindingService != null) {
-			bindingService.removeBindingManagerListener(bindingManagerListener);
-		}
+//		if (bindingService != null) {
+//			bindingService.removeBindingManagerListener(bindingManagerListener);
+//		}
 	}
 
 	@Override
@@ -764,7 +765,7 @@ public class CommandContributionItem extends ContributionItem {
 
 		command = null;
 		commandService = null;
-		bindingService = null;
+		//bindingService = null;
 		menuService = null;
 		handlerService = null;
 		disposeOldImages();

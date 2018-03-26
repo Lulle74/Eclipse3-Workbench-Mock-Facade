@@ -20,25 +20,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 
 public final class Util {
 
@@ -532,29 +525,29 @@ public final class Util {
         }
     }
 
-    public static String translateString(ResourceBundle resourceBundle,
-            String key) {
-        return Util.translateString(resourceBundle, key, key, true, true);
-    }
-
-    public static String translateString(ResourceBundle resourceBundle,
-            String key, String string, boolean signal, boolean trim) {
-        if (resourceBundle != null && key != null) {
-			try {
-                final String translatedString = resourceBundle.getString(key);
-
-                if (translatedString != null) {
-					return trim ? translatedString.trim() : translatedString;
-				}
-            } catch (MissingResourceException eMissingResource) {
-                if (signal) {
-					WorkbenchPlugin.log(eMissingResource);
-				}
-            }
-		}
-
-        return trim ? string.trim() : string;
-    }
+//    public static String translateString(ResourceBundle resourceBundle,
+//            String key) {
+//        return Util.translateString(resourceBundle, key, key, true, true);
+//    }
+//
+//    public static String translateString(ResourceBundle resourceBundle,
+//            String key, String string, boolean signal, boolean trim) {
+//        if (resourceBundle != null && key != null) {
+//			try {
+//                final String translatedString = resourceBundle.getString(key);
+//
+//                if (translatedString != null) {
+//					return trim ? translatedString.trim() : translatedString;
+//				}
+//            } catch (MissingResourceException eMissingResource) {
+//                if (signal) {
+//					WorkbenchPlugin.log(eMissingResource);
+//				}
+//            }
+//		}
+//
+//        return trim ? string.trim() : string;
+//    }
 
     public static void arrayCopyWithRemoval(Object [] src, Object [] dst, int idxToRemove) {
     	if (src == null || dst == null || src.length - 1 != dst.length || idxToRemove < 0 || idxToRemove >= src.length) {
@@ -778,40 +771,40 @@ public final class Util {
 	 * @return The loaded object which is guaranteed to be
 	 * castable to the given classSpec or null if a failure occurred
 	 */
-	public static Object safeLoadExecutableExtension(IConfigurationElement element,
-			String attName, Class classSpec) {
-		Object loadedEE = null;
-
-		// Load the handler.
-		try {
-			loadedEE = element.createExecutableExtension(attName);
-		} catch (final CoreException e) {
-			// TODO: give more info (eg plugin id)....
-			// Gather formatting info
-			final String classDef = element.getAttribute(attName);
-
-			final String message = "Class load Failure: '" + classDef + "'";  //$NON-NLS-1$//$NON-NLS-2$
-			IStatus status = new Status(IStatus.ERROR,
-					WorkbenchPlugin.PI_WORKBENCH, 0, message, e);
-			WorkbenchPlugin.log(message, status);
-		}
-
-		// Check the loaded object's type
-		if (classSpec != null && loadedEE != null && !classSpec.isInstance(loadedEE)) {
-			// ooops, the loaded class is not castable to the given type
-			final String message = "Loaded class is of incorrect type: expected(" + //$NON-NLS-1$
-				classSpec.getName() + ") got (" + loadedEE.getClass().getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-
-			IllegalArgumentException e = new IllegalArgumentException(message);
-			final IStatus status = new Status(IStatus.ERROR,
-					WorkbenchPlugin.PI_WORKBENCH, 0, message, e);
-			WorkbenchPlugin.log(message, status);
-
-			// This 'failed'
-			loadedEE = null;
-		}
-
-		return loadedEE;
-	}
+//	public static Object safeLoadExecutableExtension(IConfigurationElement element,
+//			String attName, Class classSpec) {
+//		Object loadedEE = null;
+//
+//		// Load the handler.
+//		try {
+//			loadedEE = element.createExecutableExtension(attName);
+//		} catch (final CoreException e) {
+//			// TODO: give more info (eg plugin id)....
+//			// Gather formatting info
+//			final String classDef = element.getAttribute(attName);
+//
+//			final String message = "Class load Failure: '" + classDef + "'";  //$NON-NLS-1$//$NON-NLS-2$
+//			IStatus status = new Status(IStatus.ERROR,
+//					WorkbenchPlugin.PI_WORKBENCH, 0, message, e);
+//			WorkbenchPlugin.log(message, status);
+//		}
+//
+//		// Check the loaded object's type
+//		if (classSpec != null && loadedEE != null && !classSpec.isInstance(loadedEE)) {
+//			// ooops, the loaded class is not castable to the given type
+//			final String message = "Loaded class is of incorrect type: expected(" + //$NON-NLS-1$
+//				classSpec.getName() + ") got (" + loadedEE.getClass().getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+//
+//			IllegalArgumentException e = new IllegalArgumentException(message);
+//			final IStatus status = new Status(IStatus.ERROR,
+//					WorkbenchPlugin.PI_WORKBENCH, 0, message, e);
+//			WorkbenchPlugin.log(message, status);
+//
+//			// This 'failed'
+//			loadedEE = null;
+//		}
+//
+//		return loadedEE;
+//	}
 
 }

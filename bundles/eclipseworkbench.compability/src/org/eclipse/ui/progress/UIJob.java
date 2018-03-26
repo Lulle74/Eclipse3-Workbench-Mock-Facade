@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
  * The UIJob is a Job that runs within the UI Thread via an asyncExec.
@@ -61,9 +60,9 @@ public abstract class UIJob extends Job {
      * @return IStatus an error status built from the exception
      * @see Job
      */
-    public static IStatus errorStatus(Throwable exception) {
-        return WorkbenchPlugin.getStatus(exception);
-    }
+//    public static IStatus errorStatus(Throwable exception) {
+//        return WorkbenchPlugin.getStatus(exception);
+//    }
 
     /**
      * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)

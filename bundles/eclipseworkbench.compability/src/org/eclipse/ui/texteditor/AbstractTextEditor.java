@@ -184,17 +184,12 @@ import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.internal.texteditor.EditPosition;
 import org.eclipse.ui.internal.texteditor.FocusedInformationPresenter;
 import org.eclipse.ui.internal.texteditor.TextEditorPlugin;
-import org.eclipse.ui.internal.texteditor.rulers.StringSetSerializer;
 import org.eclipse.ui.operations.LinearUndoViolationUserApprover;
 import org.eclipse.ui.operations.NonLocalUndoUserApprover;
 import org.eclipse.ui.operations.OperationHistoryActionHandler;
 import org.eclipse.ui.operations.RedoActionHandler;
 import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.texteditor.rulers.IColumnSupport;
-import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
-import org.eclipse.ui.texteditor.rulers.RulerColumnPreferenceAdapter;
-import org.eclipse.ui.texteditor.rulers.RulerColumnRegistry;
 import org.osgi.framework.Bundle;
 
 
@@ -2311,7 +2306,7 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * The column support of this editor.
 	 * @since 3.3
 	 */
-	private IColumnSupport fColumnSupport;
+	//private IColumnSupport fColumnSupport;
 
 	/** The editor's explicit document provider. */
 	private IDocumentProvider fExplicitDocumentProvider;
@@ -3191,20 +3186,20 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @since 3.3
 	 */
 	protected void updateContributedRulerColumns(CompositeRuler ruler) {
-		IColumnSupport support= getAdapter(IColumnSupport.class);
-		if (support == null)
-			return;
-
-		RulerColumnPreferenceAdapter adapter= null;
-		if (fPreferenceStore != null)
-			adapter= new RulerColumnPreferenceAdapter(getPreferenceStore(), PREFERENCE_RULER_CONTRIBUTIONS);
-
-		RulerColumnRegistry registry= RulerColumnRegistry.getDefault();
-		List<RulerColumnDescriptor> descriptors= registry.getColumnDescriptors();
-		for (Iterator<RulerColumnDescriptor> it= descriptors.iterator(); it.hasNext();) {
-			final RulerColumnDescriptor descriptor= it.next();
-			support.setColumnVisible(descriptor, adapter == null || adapter.isEnabled(descriptor));
-		}
+//		IColumnSupport support= getAdapter(IColumnSupport.class);
+//		if (support == null)
+//			return;
+//
+//		RulerColumnPreferenceAdapter adapter= null;
+//		if (fPreferenceStore != null)
+//			adapter= new RulerColumnPreferenceAdapter(getPreferenceStore(), PREFERENCE_RULER_CONTRIBUTIONS);
+//
+//		RulerColumnRegistry registry= RulerColumnRegistry.getDefault();
+//		List<RulerColumnDescriptor> descriptors= registry.getColumnDescriptors();
+//		for (Iterator<RulerColumnDescriptor> it= descriptors.iterator(); it.hasNext();) {
+//			final RulerColumnDescriptor descriptor= it.next();
+//			support.setColumnVisible(descriptor, adapter == null || adapter.isEnabled(descriptor));
+//		}
 	}
 
 	/**
@@ -3222,9 +3217,9 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 	 * @return the column support or <code>null</code> if none
 	 * @since 3.3
 	 */
-	protected IColumnSupport createColumnSupport() {
-		return null;
-	}
+//	protected IColumnSupport createColumnSupport() {
+//		return null;
+//	}
 
 	/**
 	 * Creates the source viewer to be used by this editor.
@@ -4398,10 +4393,10 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 		if (fConfiguration != null)
 			fConfiguration= null;
 
-		if (fColumnSupport != null) {
-			fColumnSupport.dispose();
-			fColumnSupport= null;
-		}
+//		if (fColumnSupport != null) {
+//			fColumnSupport.dispose();
+//			fColumnSupport= null;
+//		}
 
 		if (fVerticalRuler != null)
 			fVerticalRuler= null;
@@ -4565,15 +4560,15 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 		}
 
 		if (PREFERENCE_RULER_CONTRIBUTIONS.equals(property)) {
-			String[] difference= StringSetSerializer.getDifference((String) event.getOldValue(), (String) event.getNewValue());
-			IColumnSupport support= getAdapter(IColumnSupport.class);
-			for (int i= 0; i < difference.length; i++) {
-				RulerColumnDescriptor desc= RulerColumnRegistry.getDefault().getColumnDescriptor(difference[i]);
-				if (desc != null &&  support.isColumnSupported(desc)) {
-					boolean newState= !support.isColumnVisible(desc);
-					support.setColumnVisible(desc, newState);
-				}
-			}
+			//String[] difference= StringSetSerializer.getDifference((String) event.getOldValue(), (String) event.getNewValue());
+//			IColumnSupport support= getAdapter(IColumnSupport.class);
+//			for (int i= 0; i < difference.length; i++) {
+//				RulerColumnDescriptor desc= RulerColumnRegistry.getDefault().getColumnDescriptor(difference[i]);
+//				if (desc != null &&  support.isColumnSupported(desc)) {
+//					boolean newState= !support.isColumnVisible(desc);
+//					support.setColumnVisible(desc, newState);
+//				}
+//			}
 			return;
 		}
 
@@ -6152,11 +6147,11 @@ public abstract class AbstractTextEditor extends EditorPart implements ITextEdit
 		if (Control.class.equals(required))
 			return fSourceViewer != null ? (T) fSourceViewer.getTextWidget() : null;
 
-		if (IColumnSupport.class.equals(required)) {
-			if (fColumnSupport == null)
-				fColumnSupport= createColumnSupport();
-			return (T) fColumnSupport;
-		}
+//		if (IColumnSupport.class.equals(required)) {
+//			if (fColumnSupport == null)
+//				fColumnSupport= createColumnSupport();
+//			return (T) fColumnSupport;
+//		}
 
 		return super.getAdapter(required);
 	}

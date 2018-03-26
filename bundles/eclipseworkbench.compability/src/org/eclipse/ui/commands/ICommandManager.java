@@ -11,10 +11,9 @@
 
 package org.eclipse.ui.commands;
 
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.ui.keys.KeySequence;
+//import org.eclipse.ui.keys.KeySequence;
 
 /**
  * <p>
@@ -202,8 +201,8 @@ public interface ICommandManager {
      *         <code>String</code>). This map may be empty, but it is never
      *         <code>null</code>.
      */
-	@Deprecated
-    Map getPartialMatches(KeySequence keySequence);
+	//@Deprecated
+	//Map getPartialMatches(KeySequence keySequence);
 
     /**
      * Finds the command which has the given key sequence as one of its key
@@ -214,8 +213,8 @@ public interface ICommandManager {
      * @return The command id for the matching command, if any;
      *         <code>null</code> if none.
      */
-	@Deprecated
-    String getPerfectMatch(KeySequence keySequence);
+	//@Deprecated
+	//String getPerfectMatch(KeySequence keySequence);
 
     /**
      * Checks to see whether there are any commands which have key bindings that
@@ -227,8 +226,8 @@ public interface ICommandManager {
      *         that starts with <code>keySequence</code>;<code>false</code>
      *         otherwise.
      */
-	@Deprecated
-    boolean isPartialMatch(KeySequence keySequence);
+	//@Deprecated
+	//boolean isPartialMatch(KeySequence keySequence);
 
     /**
      * Checks to see if there is a command with the given key sequence as one of
@@ -239,8 +238,8 @@ public interface ICommandManager {
      * @return <code>true</code> if a command has a matching key binding;
      *         <code>false</code> otherwise.
      */
-	@Deprecated
-    boolean isPerfectMatch(KeySequence keySequence);
+	//@Deprecated
+	//boolean isPerfectMatch(KeySequence keySequence);
 
     /**
      * Unregisters an instance of <code>ICommandManagerListener</code>

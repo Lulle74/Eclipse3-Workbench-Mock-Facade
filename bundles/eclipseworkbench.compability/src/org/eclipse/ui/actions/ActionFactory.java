@@ -18,9 +18,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
-import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.actions.CommandAction;
 
@@ -450,28 +448,28 @@ public abstract class ActionFactory {
 	 * Workbench action (id: "export", commandId: "org.eclipse.ui.file.export"): Opens the export
 	 * wizard. This action maintains its enablement state.
 	 */
-    public static final ActionFactory EXPORT = new ActionFactory("export", //$NON-NLS-1$
-    		IWorkbenchCommandConstants.FILE_EXPORT) {
-
-        @Override
-		public IWorkbenchAction create(IWorkbenchWindow window) {
-            if (window == null) {
-                throw new IllegalArgumentException();
-            }
-
-			WorkbenchCommandAction action = new WorkbenchCommandAction(
-					getCommandId(), window);
-            action.setId(getId());
-            action.setText(WorkbenchMessages.ExportResourcesAction_fileMenuText);
-            action.setToolTipText(WorkbenchMessages.ExportResourcesAction_toolTip);
-            window.getWorkbench().getHelpSystem().setHelp(action,
-    				IWorkbenchHelpContextIds.EXPORT_ACTION);
-            action.setImageDescriptor(WorkbenchImages
-                    .getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_EXPORT_WIZ));
-            return action;
-        }
-
-    };
+//    public static final ActionFactory EXPORT = new ActionFactory("export", //$NON-NLS-1$
+//    		IWorkbenchCommandConstants.FILE_EXPORT) {
+//
+//        @Override
+//		public IWorkbenchAction create(IWorkbenchWindow window) {
+//            if (window == null) {
+//                throw new IllegalArgumentException();
+//            }
+//
+//			WorkbenchCommandAction action = new WorkbenchCommandAction(
+//					getCommandId(), window);
+//            action.setId(getId());
+//            action.setText(WorkbenchMessages.ExportResourcesAction_fileMenuText);
+//            action.setToolTipText(WorkbenchMessages.ExportResourcesAction_toolTip);
+//            window.getWorkbench().getHelpSystem().setHelp(action,
+//    				IWorkbenchHelpContextIds.EXPORT_ACTION);
+//            action.setImageDescriptor(WorkbenchImages
+//                    .getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_EXPORT_WIZ));
+//            return action;
+//        }
+//
+//    };
 
 	/**
 	 * Workbench action (id: "find", commandId: "org.eclipse.ui.edit.findReplace"): Find. This
@@ -562,28 +560,28 @@ public abstract class ActionFactory {
 	 * Workbench action (id: "import", commandId: "org.eclipse.ui.file.import"): Opens the import
 	 * wizard. This action maintains its enablement state.
 	 */
-    public static final ActionFactory IMPORT = new ActionFactory("import", //$NON-NLS-1$
-    		IWorkbenchCommandConstants.FILE_IMPORT) {
-
-        @Override
-		public IWorkbenchAction create(IWorkbenchWindow window) {
-            if (window == null) {
-                throw new IllegalArgumentException();
-            }
-
-			WorkbenchCommandAction action = new WorkbenchCommandAction(
-					getCommandId(), window);
-            action.setId(getId());
-            action.setText(WorkbenchMessages.ImportResourcesAction_text);
-            action.setToolTipText(WorkbenchMessages.ImportResourcesAction_toolTip);
-            window.getWorkbench().getHelpSystem().setHelp(action,
-    				IWorkbenchHelpContextIds.IMPORT_ACTION);
-            action.setImageDescriptor(WorkbenchImages
-                    .getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_IMPORT_WIZ));
-            return action;
-
-        }
-    };
+//    public static final ActionFactory IMPORT = new ActionFactory("import", //$NON-NLS-1$
+//    		IWorkbenchCommandConstants.FILE_IMPORT) {
+//
+//        @Override
+//		public IWorkbenchAction create(IWorkbenchWindow window) {
+//            if (window == null) {
+//                throw new IllegalArgumentException();
+//            }
+//
+//			WorkbenchCommandAction action = new WorkbenchCommandAction(
+//					getCommandId(), window);
+//            action.setId(getId());
+//            action.setText(WorkbenchMessages.ImportResourcesAction_text);
+//            action.setToolTipText(WorkbenchMessages.ImportResourcesAction_toolTip);
+//            window.getWorkbench().getHelpSystem().setHelp(action,
+//    				IWorkbenchHelpContextIds.IMPORT_ACTION);
+//            action.setImageDescriptor(WorkbenchImages
+//                    .getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_IMPORT_WIZ));
+//            return action;
+//
+//        }
+//    };
 
 	/**
 	 * Workbench action (id: "lockToolBar"): Lock/unlock the workbench window
@@ -1023,27 +1021,27 @@ public abstract class ActionFactory {
 	 * Workbench action (id: "print", commandId: "org.eclipse.ui.file.print"): Print. This action is
 	 * a {@link RetargetAction} with id "print". This action maintains its enablement state.
 	 */
-    public static final ActionFactory PRINT = new ActionFactory("print", //$NON-NLS-1$
-    		IWorkbenchCommandConstants.FILE_PRINT) {
-
-        @Override
-		public IWorkbenchAction create(IWorkbenchWindow window) {
-            if (window == null) {
-                throw new IllegalArgumentException();
-            }
-            RetargetAction action = new RetargetAction(getId(),WorkbenchMessages.Workbench_print);
-            action.setToolTipText(WorkbenchMessages.Workbench_printToolTip);
-            window.getPartService().addPartListener(action);
-            action.setActionDefinitionId(getCommandId());
-            action
-                    .setImageDescriptor(WorkbenchImages
-                            .getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
-            action
-                    .setDisabledImageDescriptor(WorkbenchImages
-                            .getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
-            return action;
-        }
-    };
+//    public static final ActionFactory PRINT = new ActionFactory("print", //$NON-NLS-1$
+//    		IWorkbenchCommandConstants.FILE_PRINT) {
+//
+//        @Override
+//		public IWorkbenchAction create(IWorkbenchWindow window) {
+//            if (window == null) {
+//                throw new IllegalArgumentException();
+//            }
+//            RetargetAction action = new RetargetAction(getId(),WorkbenchMessages.Workbench_print);
+//            action.setToolTipText(WorkbenchMessages.Workbench_printToolTip);
+//            window.getPartService().addPartListener(action);
+//            action.setActionDefinitionId(getCommandId());
+//            action
+//                    .setImageDescriptor(WorkbenchImages
+//                            .getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
+//            action
+//                    .setDisabledImageDescriptor(WorkbenchImages
+//                            .getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
+//            return action;
+//        }
+//    };
 
 	/**
 	 * Workbench action (id: "properties", commandId: "org.eclipse.ui.file.properties"): Properties.
@@ -1541,26 +1539,26 @@ public abstract class ActionFactory {
 	 *
 	 * @since 3.1
 	 */
-    public static final ActionFactory OPEN_PERSPECTIVE_DIALOG = new ActionFactory(
-            "openPerspectiveDialog", IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE) {//$NON-NLS-1$
-
-        @Override
-		public IWorkbenchAction create(IWorkbenchWindow window) {
-			if (window == null) {
-				throw new IllegalArgumentException();
-			}
-
-			WorkbenchCommandAction action = new WorkbenchCommandAction(
-					getCommandId(), window);
-			action.setId(getId());
-	        action.setText(WorkbenchMessages.OpenPerspectiveDialogAction_text);
-	        action.setToolTipText(WorkbenchMessages.OpenPerspectiveDialogAction_tooltip);
-	        action.setImageDescriptor(WorkbenchImages.getImageDescriptor(
-	              IWorkbenchGraphicConstants.IMG_ETOOL_NEW_PAGE));
-
-			return action;
-        }
-    };
+//    public static final ActionFactory OPEN_PERSPECTIVE_DIALOG = new ActionFactory(
+//            "openPerspectiveDialog", IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE) {//$NON-NLS-1$
+//
+//        @Override
+//		public IWorkbenchAction create(IWorkbenchWindow window) {
+//			if (window == null) {
+//				throw new IllegalArgumentException();
+//			}
+//
+//			WorkbenchCommandAction action = new WorkbenchCommandAction(
+//					getCommandId(), window);
+//			action.setId(getId());
+//	        action.setText(WorkbenchMessages.OpenPerspectiveDialogAction_text);
+//	        action.setToolTipText(WorkbenchMessages.OpenPerspectiveDialogAction_tooltip);
+//	        action.setImageDescriptor(WorkbenchImages.getImageDescriptor(
+//	              IWorkbenchGraphicConstants.IMG_ETOOL_NEW_PAGE));
+//
+//			return action;
+//        }
+//    };
 
 	/**
 	 * Workbench action (id: "newEditor", commandId: "org.eclipse.ui.window.newEditor"): Open a new

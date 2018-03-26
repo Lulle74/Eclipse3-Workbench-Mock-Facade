@@ -16,18 +16,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IWorkbenchCommandSupport;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.contexts.IWorkbenchContextSupport;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.operations.IWorkbenchOperationSupport;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.services.IServiceLocator;
-import org.eclipse.ui.views.IViewRegistry;
 
 /**
  * A workbench is the root object for the Eclipse Platform user interface.
@@ -546,7 +543,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 * @return the browser support system
 	 * @since 3.1
 	 */
-	public IWorkbenchBrowserSupport getBrowserSupport();
+	//public IWorkbenchBrowserSupport getBrowserSupport();
 
 	/**
 	 * Returns a boolean indicating whether the workbench is in the process of
@@ -595,7 +592,7 @@ public interface IWorkbench extends IAdaptable, IServiceLocator {
 	 * @return the workbench view registry
 	 * @since 3.1
 	 */
-	public IViewRegistry getViewRegistry();
+	//public IViewRegistry getViewRegistry();
 
 	/**
 	 * Return the new wizard registry.

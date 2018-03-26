@@ -401,7 +401,7 @@ public interface ITextEditorActionConstants extends IWorkbenchActionConstants {
 	 * @since 3.0
 	 * @see org.eclipse.ui.actions.ActionFactory#PRINT
 	 */
-	String PRINT= ActionFactory.PRINT.getId();
+	//String PRINT= ActionFactory.PRINT.getId();
 
 	/**
 	 * Name of standard Properties global action in the File menu.

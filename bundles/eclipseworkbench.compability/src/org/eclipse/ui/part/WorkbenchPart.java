@@ -37,7 +37,6 @@ import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -117,7 +116,7 @@ public abstract class WorkbenchPart extends EventManager implements
             try {
 				propertyListener.propertyChanged(WorkbenchPart.this, propertyId);
             } catch (RuntimeException e) {
-                WorkbenchPlugin.log(e);
+				//WorkbenchPlugin.log(e);
             }
         }
     }
@@ -470,7 +469,7 @@ public abstract class WorkbenchPart extends EventManager implements
 			try {
 				l.propertyChange(event);
 			} catch (RuntimeException e) {
-				WorkbenchPlugin.log(e);
+				//WorkbenchPlugin.log(e);
 			}
 		}
     }

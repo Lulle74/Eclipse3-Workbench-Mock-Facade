@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.osgi.framework.Bundle;
 
 /**
@@ -32,11 +31,11 @@ public class BundleUtility {
 		return bundle.getState() == Bundle.ACTIVE;
 	}
 
-    public static boolean isActivated(Bundle bundle) {
-		if (bundle != null && (bundle.getState() & Bundle.STARTING) != 0)
-    		return WorkbenchPlugin.getDefault().isStarting(bundle);
-        return bundle != null && (bundle.getState() & (Bundle.ACTIVE | Bundle.STOPPING)) != 0;
-    }
+//    public static boolean isActivated(Bundle bundle) {
+//		if (bundle != null && (bundle.getState() & Bundle.STARTING) != 0)
+//    		return WorkbenchPlugin.getDefault().isStarting(bundle);
+//        return bundle != null && (bundle.getState() & (Bundle.ACTIVE | Bundle.STOPPING)) != 0;
+	//   }
 
     // TODO: needs a better name
     public static boolean isReady(Bundle bundle) {
@@ -51,9 +50,9 @@ public class BundleUtility {
 		return isActive(Platform.getBundle(bundleId));
 	}
 
-    public static boolean isActivated(String bundleId) {
-        return isActivated(Platform.getBundle(bundleId));
-    }
+//    public static boolean isActivated(String bundleId) {
+//        return isActivated(Platform.getBundle(bundleId));
+//    }
 
     public static boolean isReady(String bundleId) {
         return isReady(Platform.getBundle(bundleId));

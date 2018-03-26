@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**

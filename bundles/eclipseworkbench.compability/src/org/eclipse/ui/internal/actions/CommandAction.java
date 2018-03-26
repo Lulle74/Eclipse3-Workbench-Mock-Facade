@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
@@ -113,7 +112,7 @@ public class CommandAction extends Action {
 			String commandId, Map parameterMap) {
 		Command cmd = commandService.getCommand(commandId);
 		if (!cmd.isDefined()) {
-			WorkbenchPlugin.log("Command " + commandId + " is undefined"); //$NON-NLS-1$//$NON-NLS-2$
+			//WorkbenchPlugin.log("Command " + commandId + " is undefined"); //$NON-NLS-1$//$NON-NLS-2$
 			return;
 		}
 
@@ -142,8 +141,8 @@ public class CommandAction extends Action {
 		if (handlerService == null) {
 			String commandId = (parameterizedCommand == null ? "unknownCommand" //$NON-NLS-1$
 					: parameterizedCommand.getId());
-			WorkbenchPlugin.log("Cannot run " + commandId //$NON-NLS-1$
-					+ " before command action has been initialized"); //$NON-NLS-1$
+			//WorkbenchPlugin.log("Cannot run " + commandId //$NON-NLS-1$
+			//		+ " before command action has been initialized"); //$NON-NLS-1$
 			return;
 		}
 		try {
@@ -151,7 +150,7 @@ public class CommandAction extends Action {
 				handlerService.executeCommand(parameterizedCommand, event);
 			}
 		} catch (Exception e) {
-			WorkbenchPlugin.log(e);
+			//WorkbenchPlugin.log(e);
 		}
 	}
 
