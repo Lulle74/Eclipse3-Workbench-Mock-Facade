@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Workbench Compatibility
 Bundle-SymbolicName: eclipseworkbench.compatibility;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: eclipseworkbench.compatibility.Activator
 Bundle-Vendor: Erik Lundstrom
 Require-Bundle: org.eclipse.core.runtime,
@@ -28,6 +28,7 @@ Export-Package: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.menus,
  org.eclipse.ui.model,
+ org.eclipse.ui.navigator,
  org.eclipse.ui.operations,
  org.eclipse.ui.part,
  org.eclipse.ui.plugin,
